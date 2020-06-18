@@ -6,6 +6,7 @@ import HomePage from "./Pages/HomePage";
 import BarCodeTest from './Pages/BarCodeTest';
 import ReadbarCode from './Pages/ReadBarCode';
 import MasterHome from './Pages/Master/MasterHome';
+import Shop1Inventory from './Pages/Master/SubInventories/Shop1Inventory'
 
 class App extends React.Component {
 
@@ -27,8 +28,9 @@ class App extends React.Component {
     } else {
       return (
         <Router>
-            <Route exact path="/" component={Login} />
-            <Route exact path="/Home" component={MasterHome} />
+            <Route exact path="/" component={MasterHome} />
+            <Route exact path="/Home" component={Login} />
+            <Route exact path="/Shop1Inventory  "  component={Shop1Inventory} />
         </Router>
       );
     }

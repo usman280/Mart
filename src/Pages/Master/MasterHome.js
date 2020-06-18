@@ -7,6 +7,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Sales from '../Sales';
+import Shops from './Shops';
+import Accounts from './Accounts';
+import MainInventory from './MainInventory';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -34,12 +37,6 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `nav-tab-${index}`,
-    'aria-controls': `nav-tabpanel-${index}`,
-  };
-}
 
 function LinkTab(props) {
 
@@ -90,19 +87,19 @@ export default function MasterHome() {
           onChange={handleChange}
           aria-label="nav tabs example"
         >
-          <LinkTab className={value === 0 ? classes.activetab : null } label="Page One" />
-          <LinkTab className={value === 1 ? classes.activetab : null } label="Page Two"  />
-          <LinkTab className={value === 2 ? classes.activetab : null } label="Page Three" />
+          <LinkTab className={value === 0 ? classes.activetab : null } label="Main Inventoy" />
+          <LinkTab className={value === 1 ? classes.activetab : null } label="Shops"  />
+          <LinkTab className={value === 2 ? classes.activetab : null } label="Sales" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Sales />
+        <MainInventory />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Page Two
+        <Shops />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Page Three
+        <Accounts />
       </TabPanel>
     </div>
   );
