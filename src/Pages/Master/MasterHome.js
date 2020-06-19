@@ -68,9 +68,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MasterHome() {
+export default function MasterHome(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+
+  //const Navigation= props.history;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -87,7 +89,7 @@ export default function MasterHome() {
           onChange={handleChange}
           aria-label="nav tabs example"
         >
-          <LinkTab className={value === 0 ? classes.activetab : null } label="Main Inventoy" />
+          <LinkTab className={value === 0 ? classes.activetab : null } label="Main Inventoy" onClick={()=> console.log("MainInventory")} />
           <LinkTab className={value === 1 ? classes.activetab : null } label="Shops"  />
           <LinkTab className={value === 2 ? classes.activetab : null } label="Sales" />
         </Tabs>
@@ -96,7 +98,7 @@ export default function MasterHome() {
         <MainInventory />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Shops />
+        <Shops props={props }/>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Accounts />

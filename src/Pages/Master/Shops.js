@@ -30,15 +30,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Shops() {
+
+export default function Shops({ props }) {
     const classes = useStyles();
 
+    const Navigation = props.history;
     return (
         <div className={classes.root}>
             <Grid className={classes.maingridView} container spacing={3}>
 
                 <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation' >
+                    <Card className={classes.cardStyle} variant='elevation' onClick={() => Navigation.push('./Shop1Inventory')} >
                         <CardContent className={classes.cardContentStyle}>
                             <h1>Shop A</h1>
                             <p>Shop Number 1</p>
@@ -48,7 +50,7 @@ export default function Shops() {
 
 
                 <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
+                    <Card className={classes.cardStyle} variant='elevation' onClick={() => Navigation.push('./Shop2Inventory')}>
                         <CardContent className={classes.cardContentStyle}>
                             <h1>Shop B</h1>
                             <p>Shop Number 2</p>
@@ -57,7 +59,7 @@ export default function Shops() {
                 </Grid>
 
                 <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
+                    <Card className={classes.cardStyle} variant='elevation' onClick={() => Navigation.push('./Shop3Inventory')}>
                         <CardContent className={classes.cardContentStyle}>
                             <h1>Shop C</h1>
                             <p>Shop Number 3</p>
@@ -66,7 +68,7 @@ export default function Shops() {
                 </Grid>
 
                 <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
+                    <Card className={classes.cardStyle} variant='elevation' onClick={() => Navigation.push('./Shop4Inventory')}>
                         <CardContent className={classes.cardContentStyle}>
                             <h1>Shop D</h1>
                             <p>Shop Number 4</p>

@@ -1,29 +1,34 @@
 import React from 'react';
-import MaterialTable from 'material-table';
+import CustomTable from '../../../Components/CustomTable';
+import { database } from '../../../config';
 
 
 export default function Shop1Inventory() {
   return (
-    <MaterialTable
-      title="Basic Search Preview"
-      icons="Search"
-      columns={[
-        { title: 'Name', field: 'name' },
-        { title: 'Surname', field: 'surname' },
-        { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-        {
-          title: 'Birth Place',
-          field: 'birthCity',
-          lookup: { 34: 'Lahore', 63: 'Karachi' },
-        },
-      ]}
-      data={[
-        { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-        { name: 'Zerya Betül', surname: 'Baran', birthYear: 2017, birthCity: 34 },
-      ]}        
-      options={{
-        search: true
-      }}
+    <CustomTable
+      mytitle="Shop 1 Inventory"
+      mydata={res =>
+        new Promise((resolve) => {
+          database
+            .ref("Inventory")
+            .orderByChild("quantity")
+            .on("value", (snapshot) => {
+              let items = snapshot.val();
+
+              let newItemsList = [];
+              for (let item in items) {
+                newItemsList.push({
+                  itemid: items[item].itemid,
+                  itemname: items[item].itemname,
+                  price: items[item].price,
+                  quantity: items[item].quantity,
+                });
+              }
+              resolve({
+                data: newItemsList
+              })
+            });
+        })}
     />
   )
 }
