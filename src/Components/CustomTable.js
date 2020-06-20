@@ -30,6 +30,7 @@ const CustomTable = ({mytitle, mydata}) => {
         { title: 'Price', field: 'price' },
         { title: 'Quantity', field: 'quantity' },
       ]}
+      
 
       data={mydata}
     />
