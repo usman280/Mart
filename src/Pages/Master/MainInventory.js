@@ -208,6 +208,7 @@ export default function MainInventory() {
       for (let item in shop1list) {
         if (e.target.value === shop1list[item].itemid) {
           setShop1PreviousQuantity(shop1list[item].quantity);
+          break;
         } else {
           setShop1PreviousQuantity(0);
         }
@@ -222,6 +223,7 @@ export default function MainInventory() {
       for (let item in shop2list) {
         if (e.target.value === shop2list[item].itemid) {
           setShop2PreviousQuantity(shop2list[item].quantity);
+          break;
         } else {
           setShop2PreviousQuantity(0);
         }
@@ -236,6 +238,7 @@ export default function MainInventory() {
       for (let item in shop3list) {
         if (e.target.value === shop3list[item].itemid) {
           setShop3PreviousQuantity(shop3list[item].quantity);
+          break;
         } else {
           setShop3PreviousQuantity(0);
         }
@@ -250,6 +253,7 @@ export default function MainInventory() {
       for (let item in shop4list) {
         if (e.target.value === shop4list[item].itemid) {
           setShop4PreviousQuantity(shop4list[item].quantity);
+          break;
         } else {
           setShop4PreviousQuantity(0);
         }
