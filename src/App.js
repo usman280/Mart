@@ -4,8 +4,10 @@ import LoginPage from './Pages/LoginPage';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import MasterHome from './Pages/Master/MasterHome';
-import Shop1Inventory from './Pages/Master/SubInventories/Shop1Inventory'
-import Shop2Inventory from './Pages/Master/SubInventories/Shop2Inventory'
+import Shop1Inventory from './Pages/Master/SubInventories/Shop1Inventory';
+import Shop2Inventory from './Pages/Master/SubInventories/Shop2Inventory';
+import Shop3Inventory from './Pages/Master/SubInventories/Shop3Inventroy';
+import Shop4Inventory from './Pages/Master/SubInventories/Shop4Inventroy';
 import Shops from "./Pages/Master/Shops";
 import CustomTable from './Components/CustomTable';
 import MainInventory from "./Pages/Master/MainInventory";
@@ -37,8 +39,8 @@ class App extends React.Component {
             <Route exact path="/Shops" component={Shops} />
             <Route exact path="/Shop1Inventory"  component={Shop1Inventory} />
             <Route exact path="/Shop2Inventory"  component={Shop2Inventory} />
-            {/* <Route exact path="/Shop1Inventory"  component={Shop3Inventory} />
-            <Route exact path="/Shop1Inventory"  component={Shop4Inventory} /> */}
+            <Route exact path="/Shop3Inventory"  component={Shop3Inventory} />
+            <Route exact path="/Shop4Inventory"  component={Shop4Inventory} />
         </Router>
       );
     }
