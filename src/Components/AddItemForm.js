@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import ReactToPrint from "react-to-print";
+import QRCodeGenerator from '../Pages/QRCodeGenerator';
 
 
 
-const AddItemForm = ({ open, onClose, itemId, itemname, price, quantity, onCancelClick, onAddItemClick, idHandler, nameHandler, priceHandler, quantityHandler }) => {
+const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, quantity, onCancelClick, onAddItemClick, idHandler, nameHandler, priceHandler, quantityHandler }) => {
+
+    const componentRef = useRef();
+
     return (
         <Dialog
             open={open}
@@ -60,8 +65,11 @@ const AddItemForm = ({ open, onClose, itemId, itemname, price, quantity, onCance
                     autoComplete="off"
                     onChange={quantityHandler}
                 />
+
+
             </DialogContent>
             <DialogActions>
+                <QRCodeGenerator ref={componentRef} value={itemId} />
                 <Button
                     variant="contained"
                     onClick={onCancelClick}
@@ -69,13 +77,17 @@ const AddItemForm = ({ open, onClose, itemId, itemname, price, quantity, onCance
                 >
                     Cancel
                 </Button>
-                <Button
-                    variant="contained"
-                    onClick={onAddItemClick}
-                    color="primary"
-                >
-                    Add Item
-                </Button>
+                <ReactToPrint
+                    trigger={() => <Button
+                        variant="contained"
+                        onClick={onAddItemClick}
+                        color="primary"
+                    >
+                        Add Item
+                    </Button>}
+                    content={() => componentRef.current}
+                />
+
             </DialogActions>
         </Dialog>
     )

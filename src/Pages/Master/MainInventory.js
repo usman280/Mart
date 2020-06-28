@@ -6,6 +6,7 @@ import AddItemForm from "../../Components/AddItemForm";
 import DistributionForm from "../../Components/DistributionForm";
 import ShowDialogButton from "../../Components/ShowDialogButton";
 import CustomTable from "../../Components/CustomTable";
+import QRCodeGenerator from '../QRCodeGenerator';
 
 export default function MainInventory() {
   const [open, setOpen] = useState(false);
