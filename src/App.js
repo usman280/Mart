@@ -13,8 +13,14 @@ import CustomTable from './Components/CustomTable';
 import MainInventory from "./Pages/Master/MainInventory";
 //import QRCodeGenerator from "./Pages/QRcodeGenerator";
 import ComponentToPrint from './Pages/QRCodeGenerator';
-import QRCodeReader from "./Pages/QRCodeReader";
 import PrintCheck from './Pages/PrintCheck';
+import Shop1Home from './Pages/ShopView/Shop1/Shop1Home';
+import Shop2Home from './Pages/ShopView/Shop2/Shop2Home';
+import QRCodeReader from './Pages/QRCodeReader';
+import CodeReader from './Components/BarCodeReader';
+import Shop1Sales from "./Pages/ShopView/Shop1/Shop1Sales";
+import BarCodeGenerator from "./Pages/BarCodeGenerator";
+import BarCodeReader from "./Pages/BarCodeReader";
 
 class App extends React.Component {
 
@@ -36,7 +42,7 @@ class App extends React.Component {
     } else {
       return (
         <Router>
-          <Route exact path="/" component={MasterHome} />
+          <Route exact path="/" component={BarCodeReader} />
           <Route exact path="/Home" component={Login} />
           <Route exact path="/Shops" component={Shops} />
           <Route exact path="/Shop1Inventory" component={Shop1Inventory} />

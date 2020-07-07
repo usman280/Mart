@@ -86,6 +86,7 @@ export default function MainInventory() {
 
         database
           .ref(key)
+          .child("Inventory")
           .child(itemId)
           .update(subInventoryDetails)
           .then((res) => {
@@ -106,6 +107,7 @@ export default function MainInventory() {
 
         database
           .ref(key)
+          .child("Inventory")
           .child(itemId)
           .update(subInventoryDetails)
           .then((res) => {
@@ -126,6 +128,7 @@ export default function MainInventory() {
 
         database
           .ref(key)
+          .child("Inventory")
           .child(itemId)
           .update(subInventoryDetails)
           .then((res) => {
@@ -146,6 +149,7 @@ export default function MainInventory() {
 
         database
           .ref(key)
+          .child("Inventory")
           .child(itemId)
           .update(subInventoryDetails)
           .then((res) => {
@@ -311,85 +315,42 @@ export default function MainInventory() {
     };
 
     const fetchShopsData = async () => {
-      database
-        .ref("shop1")
-        .orderByChild("quantity")
-        .on("value", (snapshot) => {
-          let items = snapshot.val();
-          console.log("Response", items);
 
-          let newShop1List = [];
-          for (let item in items) {
-            newShop1List.push({
-              itemid: items[item].itemid,
-              itemname: items[item].itemname,
-              price: items[item].price,
-              quantity: items[item].quantity,
-            });
-          }
+      for (let [key] of Object.entries(state)) {
+        database
+          .ref(key)
+          .child("Inventory")
+          .orderByChild("quantity")
+          .on("value", (snapshot) => {
+            let items = snapshot.val();
 
-          setShop1Data(newShop1List);
-        });
+            let ShopList = [];
+            for (let item in items) {
+              ShopList.push({
+                itemid: items[item].itemid,
+                itemname: items[item].itemname,
+                price: items[item].price,
+                quantity: items[item].quantity,
+              });
+            }
 
-      database
-        .ref("shop2")
-        .orderByChild("quantity")
-        .on("value", (snapshot) => {
-          let items = snapshot.val();
-          console.log("Response", items);
+            if (key === "shop1") {
+              setShop1Data(ShopList);
+            }
 
-          let newShop2List = [];
-          for (let item in items) {
-            newShop2List.push({
-              itemid: items[item].itemid,
-              itemname: items[item].itemname,
-              price: items[item].price,
-              quantity: items[item].quantity,
-            });
-          }
+            if (key === "shop2") {
+              setShop2Data(ShopList);
+            }
 
-          setShop2Data(newShop2List);
-        });
+            if (key === "shop3") {
+              setShop3Data(ShopList);
+            }
 
-      database
-        .ref("shop3")
-        .orderByChild("quantity")
-        .on("value", (snapshot) => {
-          let items = snapshot.val();
-          console.log("Response", items);
-
-          let newShop3List = [];
-          for (let item in items) {
-            newShop3List.push({
-              itemid: items[item].itemid,
-              itemname: items[item].itemname,
-              price: items[item].price,
-              quantity: items[item].quantity,
-            });
-          }
-
-          setShop3Data(newShop3List);
-        });
-
-      database
-        .ref("shop4")
-        .orderByChild("quantity")
-        .on("value", (snapshot) => {
-          let items = snapshot.val();
-          console.log("Response", items);
-
-          let newShop4List = [];
-          for (let item in items) {
-            newShop4List.push({
-              itemid: items[item].itemid,
-              itemname: items[item].itemname,
-              price: items[item].price,
-              quantity: items[item].quantity,
-            });
-          }
-
-          setShop4Data(newShop4List);
-        });
+            if (key === "shop4") {
+              setShop4Data(ShopList);
+            }
+          });
+      }
     };
 
     fetchData();
@@ -461,7 +422,8 @@ export default function MainInventory() {
         error={showError}
       />
 
-      <CustomTable mytitle="Main Inventory" mydata={data} />
+      <CustomTable mytitle="Main Inventory" mydata={data} search={true}
+        exportButton={true} />
     </div>
   );
 }

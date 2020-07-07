@@ -2,7 +2,7 @@ import React from "react";
 import MaterialTable from "material-table";
 import { Search, Clear, ArrowDownward } from "@material-ui/icons";
 
-const CustomTable = ({ mytitle, mydata }) => {
+const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
   let pDate = new Date();
 
   let printDate =

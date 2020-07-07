@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
-import { Button } from '@material-ui/core'
 import { database } from '../config';
 
 export default class QRCodeReader extends Component {
@@ -41,21 +40,19 @@ export default class QRCodeReader extends Component {
         console.error(err)
     }
     render() {
-        const previewStyle = {
-            height: 240,
-            width: 320,
-        }
-
         return (
             <div>
+                <div>
                 <QrReader
-                    delay={this.state.delay}
-                    style={previewStyle}
+                    delay={100}
                     onError={this.handleError}
                     onScan={this.handleScan}
+                    resolution={100}
+                    facingMode="environment"
+                    style={{ height: 240, width: 300 }}
                 />
-                <p style={{ textAlign: 'center', color: "red" }}>{this.state.result}</p>
-                <Button onClick={this.submitTransaction}>Do Transaction</Button>
+                </div>
+                <p style={{ marginTop: 400, color: 'red', fontSize: 30}}>{this.state.result}</p>
             </div>
         )
     }

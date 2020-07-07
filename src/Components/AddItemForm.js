@@ -9,6 +9,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
 
     const componentRef = useRef();
 
+
     return (
         <Dialog
             open={open}
@@ -36,8 +37,8 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
                     variant='outlined'
                     type="text"
                     value={itemname}
-                    autoCapitalize
-                    autoComplete={false}
+                    autoCapitalize="true"
+                    autoComplete="off"
                     placeholder="itemname"
                     fullWidth
                     onChange={nameHandler}
