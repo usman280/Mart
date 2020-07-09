@@ -6,7 +6,7 @@ export default class BarCodeGenerator extends Component {
  
     return(
       <div>
-        <Barcode value="1" />
+        <Barcode value="4" />
       </div>
     )
   }

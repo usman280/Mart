@@ -21,6 +21,7 @@ import CodeReader from './Components/BarCodeReader';
 import Shop1Sales from "./Pages/ShopView/Shop1/Shop1Sales";
 import BarCodeGenerator from "./Pages/BarCodeGenerator";
 import BarCodeReader from "./Pages/BarCodeReader";
+import MyReader from "./Pages/MyReader";
 
 class App extends React.Component {
 
@@ -36,13 +37,13 @@ class App extends React.Component {
     if (this.state.loading) {
       return (
         <div style={{ justifyContent: "center", alignItems: "center" }}>
-          <p>Loading</p>
+          <p>Loading</p>  
         </div>
       );
     } else {
       return (
         <Router>
-          <Route exact path="/" component={BarCodeReader} />
+          <Route exact path="/" component={Shop1Sales} />
           <Route exact path="/Home" component={Login} />
           <Route exact path="/Shops" component={Shops} />
           <Route exact path="/Shop1Inventory" component={Shop1Inventory} />

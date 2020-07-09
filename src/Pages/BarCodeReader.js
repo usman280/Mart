@@ -27,7 +27,7 @@ export default class BarCodeReader extends Component {
         this.onDetectedHandler = this.onDetectedHandler.bind(this)
         this.startScanning = this.startScanning.bind(this)
         this.stopScanning = this.stopScanning.bind(this)
-        this.captureImage = this.captureImage.bind(this)
+        //this.captureImage = this.captureImage.bind(this)
         //  this.saveNewLabel = this.saveNewLabel.bind(this)
         // this.setSearchValue = this.setSearchValue.bind(this)
     }
@@ -37,6 +37,7 @@ export default class BarCodeReader extends Component {
     }
 
     onDetectedHandler = (result) => {
+        this.myDetectedHandler(result);
         console.log("My Barcode value", result.codeResult.code);
     }
 
@@ -54,14 +55,14 @@ export default class BarCodeReader extends Component {
         Quagga.start()
 
         // once Quagga barcode scanner has instantiated, barcode scanner HTML elements are present and ready to be attached to state.
-        this.setState({
-            canvas: document.querySelector('.input-stream canvas'),
-        })
+        // this.setState({
+        //     canvas: document.querySelector('.input-stream canvas'),
+        // })
 
-        this.setState({
-            context: this.state.canvas.getContext('2d'),
-            video: document.querySelector('.input-stream video'),
-        })
+        // this.setState({
+        //     context: this.state.canvas.getContext('2d'),
+        //     video: document.querySelector('.input-stream video'),
+        // })
     }
 
     // display alert if a barcode is scanned a second time.
@@ -70,14 +71,14 @@ export default class BarCodeReader extends Component {
     }
 
     // destructure argument into the information we need, to avoid imperative variable declarations with all the usual verbose validity checks.
-    onDetectedHandler({ codeResult }) {
+    myDetectedHandler({ codeResult }) {
         Quagga.offDetected()
 
         // check if the code is already in state, and alert if it is, or add to state and capture if not.
         this.state.codes.includes(codeResult.code)
             ? this.displayDuplicateAlert()
             : (() => {
-                this.captureImage()
+               // this.captureImage()
                 this.addDetectedCode(codeResult.code)
             })()
 
@@ -86,26 +87,26 @@ export default class BarCodeReader extends Component {
         The delay gives the  user time to physically move the code away from the camera */
         setTimeout(() => {
             Quagga.onDetected(this.onDetectedHandler)
-        }, 2000)
+        },4000)
 
     }
 
     // save the image as a blob in local state
-    captureImage() {
-        // draw the image into an html canvas element from the video stream
-        this.state.context.drawImage(this.state.video, 0, 0, this.state.canvas.width, this.state.canvas.height)
-        // export blob from canvas element
-        this.state.canvas.toBlob(blob => {
-            // give blob a url
-            const url = URL.createObjectURL(blob)
-            // add blob url to state for access by the image list element
-            this.setState({
-                imageUrls: [...this.state.imageUrls, url]
-            })
-            // clear the canvas to be ready for the next scan
-            this.state.context.clearRect(0, 0, this.state.canvas.width, this.state.canvas.height);
-        })
-    }
+    // captureImage() {
+    //     // draw the image into an html canvas element from the video stream
+    //     this.state.context.drawImage(this.state.video, 0, 0, this.state.canvas.width, this.state.canvas.height)
+    //     // export blob from canvas element
+    //     this.state.canvas.toBlob(blob => {
+    //         // give blob a url
+    //         const url = URL.createObjectURL(blob)
+    //         // add blob url to state for access by the image list element
+    //         this.setState({
+    //             imageUrls: [...this.state.imageUrls, url]
+    //         })
+    //         // clear the canvas to be ready for the next scan
+    //         this.state.context.clearRect(0, 0, this.state.canvas.width, this.state.canvas.height);
+    //     })
+    // }
 
     // add new detected barcode to state
     addDetectedCode(code) {
@@ -152,11 +153,7 @@ export default class BarCodeReader extends Component {
         return (
             <div className="App">
                 <div className="AppContainer">
-                    <header className="App-header">
-                        <h1 className="App-title"> Barcode Scanner</h1>
-                    </header>
                     <div className="input-stream"></div>
-                    <div className="barcodeImageContainer" />
                 </div>
             </div>
         );
