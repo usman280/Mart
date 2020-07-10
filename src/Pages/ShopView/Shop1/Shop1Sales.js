@@ -178,17 +178,17 @@ export default function Shop1Sales() {
 
           <div ref={componentRef} style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'space-around' }}>
 
-            {print ? (<div ref={nameRef}>
-              <h1>Mini Mini Garments</h1>
+            {print ? (<div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <h4>Mini Mini Garments</h4>
               <p>Shop Num 1</p>
               <p>Address: Madina City Mall Saddar</p>
             </div>) : null}
 
-            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }}>
-              <p >Item Id</p>
-              <p>Item Name</p>
-              <p>Item Price</p>
-              <p>Item Quantity</p>
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center', background:'#000' }}>
+              <p style={{fontSize: 15, color:'#fff'}}>Item Id</p>
+              <p style={{fontSize: 15, color:'#fff'}}>Item Name</p>
+              <p style={{fontSize: 15, color:'#fff'}}>Item Price</p>
+              <p style={{fontSize: 15, color:'#fff'}}>Item Quantity</p>
             </div>
             <div>
               {mapList()}
@@ -213,7 +213,9 @@ export default function Shop1Sales() {
               Generate Receipt
                     </Button>}
             onBeforeGetContent={() => {
-              setPrint(true)}}
+              setPrint(true);
+              return Promise.resolve();
+            }}
             onAfterPrint={() => setPrint(false)}
             documentTitle={"Mini Mini Garments"}
             content={() => componentRef.current}
