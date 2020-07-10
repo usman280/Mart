@@ -13,6 +13,7 @@ export default function Shop1Sales() {
 
 
   const componentRef = useRef();
+  const nameRef = useRef();
 
   const [shop1Data, setShop1Data] = useState([]);
   const [open, setOpen] = useState(false);
@@ -20,8 +21,7 @@ export default function Shop1Sales() {
   const [list] = useState([]);
   const [codes, setCodes] = useState([]);
   const [scanning, setScanning] = useState(false);
-
-  const cameraRef = createRef();
+  const [print, setPrint] = useState(false);
 
 
   useEffect(() => {
@@ -60,47 +60,32 @@ export default function Shop1Sales() {
 
 
   var onDetectedHandler = (result) => {
-    myDetectedHandler(result);
-    console.log("My Barcode value", result.codeResult.code);
-    if (result) {
-      const path = result.codeResult.code.toString();
-
-      database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
-
-
-        list.push(snapshot.val());
-
-        console.log(list);
-
-        setReceipt(list);
-      });
-    }
-  }
-
-  function quaggaInitCallback(err) {
-
-    if (err) {
-      console.log(err);
-      return
-    }
-
-    Quagga.onDetected(onDetectedHandler)
-
-    Quagga.start()
-  }
-
-  function myDetectedHandler({ codeResult }) {
     Quagga.offDetected()
 
-    codes.includes(codeResult.code)
-      ? window.alert("You have already scanned this code")
-      : (() => {
-        setCodes(...codes, codeResult.code)
-      })()
+    console.log("Codes", codes);
 
+    if (codes.includes(result.codeResult.code)) {
+      window.alert("Already Scanned");
+    }
+    else {
+      const itemid = result.codeResult.code;
+      codes.push(itemid);
+
+      if (result && result !== null) {
+        const path = itemid.toString();
+
+        database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
+
+          list.push(snapshot.val());
+          const newlist = [...list];
+          setReceipt(newlist);
+        });
+      }
+    }
     setTimeout(() => {
+      Quagga.start();
       Quagga.onDetected(onDetectedHandler)
-    }, 3000)
+    }, 1000);
 
   }
 
@@ -108,7 +93,7 @@ export default function Shop1Sales() {
     Quagga.stop()
   }
 
-  function startScanning() {
+  function startScanning(cores) {
     Quagga.init({
       inputStream: {
         name: "Barcode Scanner",
@@ -119,31 +104,23 @@ export default function Shop1Sales() {
           height: 240,
         },
       },
-      frequency: 2,
+      frequency: 10,
       decoder: {
         readers: ["code_128_reader"],
         multiple: false,
       },
       locate: true,
-    },
-      quaggaInitCallback.bind(this));
-  }
+      numofWorkers: cores,
+    }, function (err) {
+      if (err) {
+        console.log(err);
+        return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
+    });
 
-
-  function handleScan(id) {
-    if (id) {
-      const path = id.toString();
-
-      database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
-
-
-        list.push(snapshot.val());
-
-        console.log(list);
-
-        setReceipt(list);
-      });
-    }
+    Quagga.onDetected(onDetectedHandler);
   }
 
   const mapList = () => receipt.map(
@@ -183,7 +160,7 @@ export default function Shop1Sales() {
         <ShowDialogButton onClick={() => {
           setOpen(true);
           setTimeout(() => {
-            startScanning();
+            startScanning(navigator.hardwareConcurrency);
           }, 100);
         }} />
       </div>
@@ -197,11 +174,18 @@ export default function Shop1Sales() {
         <DialogTitle id="form-dialog-title">Enter Item Details</DialogTitle>
         <DialogContent style={{ marginBottom: 20, height: 200 }}>
 
-          <div style={{display:'flex', flex:1, flexDirection:'column', height: 250, alignItems:'center'}} className="input-stream"></div>
+          <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: 250, alignItems: 'center' }} className="input-stream"></div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'space-around' }}>
+          <div ref={componentRef} style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'space-around' }}>
+
+            {print ? (<div ref={nameRef}>
+              <h1>Mini Mini Garments</h1>
+              <p>Shop Num 1</p>
+              <p>Address: Madina City Mall Saddar</p>
+            </div>) : null}
+
             <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }}>
-              <p>Item Id</p>
+              <p >Item Id</p>
               <p>Item Name</p>
               <p>Item Price</p>
               <p>Item Quantity</p>
@@ -220,14 +204,18 @@ export default function Shop1Sales() {
           >
             Cancel
                 </Button>
+
           <ReactToPrint
             trigger={() => <Button
               variant="contained"
-              onClick={() => console.log("function for print missing")}
               color="primary"
             >
               Generate Receipt
                     </Button>}
+            onBeforeGetContent={() => {
+              setPrint(true)}}
+            onAfterPrint={() => setPrint(false)}
+            documentTitle={"Mini Mini Garments"}
             content={() => componentRef.current}
           />
 

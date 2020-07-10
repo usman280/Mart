@@ -50,21 +50,22 @@ export default function ListCheck() {
 
                 database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
 
+                    console.log("snapshot", snapshot.val());
 
                     list.push(snapshot.val());
+                    const newlist = [...list];
+                    setReceipt(newlist);
 
-                    console.log(list);
-
-                    setReceipt(list);
+                    console.log(receipt)
+                    
                 });
             }
-
-            setTimeout(() => {
-                Quagga.start();
-                Quagga.onDetected(onDetectedHandler)
-            }, 1000);
         }
         // console.log("My Barcode value", result.codeResult.code);
+        setTimeout(() => {
+            Quagga.start();
+            Quagga.onDetected(onDetectedHandler)
+        }, 1000);
 
     }
 
@@ -197,11 +198,14 @@ export default function ListCheck() {
                     itemname: "Ibad",
                     price: 200,
                     quantity: 20
-                }
+                };
 
-                list.push(details);
-                setReceipt(list);
+                // list.push(details);
+
+                const newlist = [...receipt, details];
+                setReceipt(newlist);
                 console.log(receipt);
+                //  console.log(list);
             }}>
                 Add New Item
             </Button>
