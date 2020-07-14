@@ -15,7 +15,7 @@ const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
         borderColor: "#000",
         borderStyle: "Solid",
         marginTop: 30,
-      }}
+      }}  
       options={{
         search: true,
         exportButton: true,
@@ -23,9 +23,13 @@ const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
         sorting: false,
         draggable: false,
         headerStyle: {
-          backgroundColor: "#01579b",
+          backgroundColor: "#e61f27",
           color: "#FFF",
           textAlign: "center",
+          opacity: 1,
+          letterSpacing: 1,
+          fontWeight: 'bold',
+          fontFamily: 'helvetica'
         },
         paging: false,
         loadingType: "overlay",
@@ -37,11 +41,12 @@ const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
       }}
       title={mytitle}
       columns={[
-        { title: "Item Id", field: "itemid" },
-        { title: "Name", field: "itemname" },
-        { title: "Price", field: "price" },
-        { title: "Quantity", field: "quantity" },
-      ]}
+        { title: "Item Id", field: "itemid", cellStyle:{ textAlign:'center', fontWeight: '550'} },
+        { title: "Name", field: "itemname", cellStyle:{ textAlign:'center', fontWeight: '550'  }},
+        { title: "Price", field: "price", cellStyle:{ textAlign:'center', fontWeight: '550' }},
+        { title: "Quantity", field: "quantity", cellStyle:{ textAlign:'center' , fontWeight: '550' } },
+      ]
+    }
       data={mydata}
     />
   );

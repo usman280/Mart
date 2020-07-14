@@ -5,7 +5,7 @@ import AddCircle from "@material-ui/icons/AddCircle";
 const ShowDialogButton = ({ onClick }) => {
     return (
         <Button
-            style={{ marginBottom: 10 }}
+            style={{ marginBottom: 10, backgroundColor:'#e61f27', color:'#fff', opacity: 0.9, letterSpacing: 1 }}
             onClick={onClick}
             variant="contained"
             color="primary"

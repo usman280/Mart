@@ -27,7 +27,7 @@ export default function MainInventory() {
   const [showError, setError] = useState(false);
   const [distributionDialog, setDistributionDialog] = useState(false);
   const [deductMultiplier, setDeductMultiplier] = useState("0");
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     shop1: false,
     shop2: false,
     shop3: false,
@@ -377,12 +377,11 @@ export default function MainInventory() {
         }}
       >
         <Button
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 10, backgroundColor:'#e61f27', color:'#fff', opacity: 0.9, letterSpacing: 1 }}
           onClick={() => {
             setDistributionDialog(true);
           }}
           variant="contained"
-          color="primary"
           startIcon={<AddCircle />}
         >
           Distribute

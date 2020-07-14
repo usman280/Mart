@@ -44,7 +44,7 @@ class App extends React.Component {
     } else {
       return (
         <Router>
-          <Route exact path="/" component={Shop1Sales} />
+          <Route exact path="/" component={MasterHome} />
           <Route exact path="/Home" component={Login} />
           <Route exact path="/Shops" component={Shops} />
           <Route exact path="/Shop1Inventory" component={Shop1Inventory} />
