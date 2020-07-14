@@ -15,7 +15,7 @@ const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
         borderColor: "#000",
         borderStyle: "Solid",
         marginTop: 30,
-      }}  
+      }}
       options={{
         search: true,
         exportButton: true,
@@ -41,12 +41,12 @@ const CustomTable = ({ mytitle, mydata, search, exportButton }) => {
       }}
       title={mytitle}
       columns={[
-        { title: "Item Id", field: "itemid", cellStyle:{ textAlign:'center', fontWeight: '550'} },
-        { title: "Name", field: "itemname", cellStyle:{ textAlign:'center', fontWeight: '550'  }},
-        { title: "Price", field: "price", cellStyle:{ textAlign:'center', fontWeight: '550' }},
-        { title: "Quantity", field: "quantity", cellStyle:{ textAlign:'center' , fontWeight: '550' } },
+        { title: "Item Id", field: "itemid", cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' } },
+        { title: "Name", field: "itemname", cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' } },
+        { title: "Price", field: "price", cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' } },
+        { title: "Quantity", field: "quantity", cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' } },
       ]
-    }
+      }
       data={mydata}
     />
   );

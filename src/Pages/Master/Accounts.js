@@ -26,53 +26,42 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 50,
     },
     subgridView: {
-       marginTop: 30,
+        marginTop: 30,
     }
 }));
 
-export default function Accounts() {
+export default function Accounts({ props }) {
     const classes = useStyles();
 
+    const Navigation = props.history;
     return (
         <div className={classes.root}>
-            <Grid className={classes.maingridView} container spacing={3}>
-                <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
-                        <CardContent className={classes.cardContentStyle}>
-                            <h1>Shop A</h1>
-                            <p>Sales</p>
-                        </CardContent>
-                    </Card>
-                </Grid>
 
-                <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
-                        <CardContent className={classes.cardContentStyle}>
-                            <h1>Shop A</h1>
-                            <p>Sales</p>
-                        </CardContent>
-                    </Card>
-                </Grid>
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'items', justifyContent: 'space-around', marginTop: 70 }}>
 
-                <Grid className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
-                        <CardContent className={classes.cardContentStyle}>
-                            <h1>Shop A</h1>
-                            <p>Sales</p>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                <span style={{ borderWidth: 1.5, borderStyle: 'solid', width: '30%', padding: 25, borderRadius: 20, backgroundColor: '#e61f27', opacity: 0.9 }} onClick={() => Navigation.push('./Shop1')}>
+                    <p style={{ fontSize: 22, fontWeight: '500', textAlign: 'center', color: '#fff', letterSpacing: 1 }}>Shop 1</p>
+                </span>
 
-                <Grid  className={classes.subgridView} item xs={6}>
-                    <Card className={classes.cardStyle} variant='elevation'>
-                        <CardContent className={classes.cardContentStyle}>
-                            <h1>Shop A</h1>
-                            <p>Sales</p>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                <span style={{ borderWidth: 1.5, borderStyle: 'solid', width: '30%', padding: 25, borderRadius: 20, backgroundColor: '#e61f27', opacity: 0.9 }} onClick={() => Navigation.push('./Shop2')}>
+                    <p style={{ fontSize: 22, fontWeight: '500', textAlign: 'center', color: '#fff', letterSpacing: 1 }}>Shop 2</p>
+                </span>
 
-            </Grid>
+            </div>
+
+
+
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, alignItems: 'items', justifyContent: 'space-around', marginTop: 70 }}>
+
+                <span style={{ borderWidth: 1.5, borderStyle: 'solid', width: '30%', padding: 25, borderRadius: 20, backgroundColor: '#e61f27', opacity: 0.9 }} onClick={() => Navigation.push('./Shop3')}>
+                    <p style={{ fontSize: 22, fontWeight: '500', textAlign: 'center', color: '#fff', letterSpacing: 1 }}>Shop 3</p>
+                </span>
+
+                <span style={{ borderWidth: 1.5, borderStyle: 'solid', width: '30%', padding: 25, borderRadius: 20, backgroundColor: '#e61f27', opacity: 0.9 }} onClick={() => Navigation.push('./Shop4')}>
+                    <p style={{ fontSize: 22, fontWeight: '500', textAlign: 'center', color: '#fff', letterSpacing: 1 }}>Shop 4</p>
+                </span>
+
+            </div>
         </div>
     );
 }

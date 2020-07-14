@@ -79,6 +79,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
                     Cancel
                 </Button>
                 <ReactToPrint
+                onBeforeGetContent={onAddItemClick}
                     trigger={() => <Button
                         variant="contained"
                         onClick={onAddItemClick}
