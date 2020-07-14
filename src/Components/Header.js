@@ -11,6 +11,8 @@ const Header = ({username, imageSource}) => {
             alignItems: "center",
             paddingLeft: 20,
             paddingRight: 20,
+            borderBottomWidth: 1,
+            borderBottomStyle:'solid'
         }}>
 
             <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -18,7 +20,7 @@ const Header = ({username, imageSource}) => {
                 <p style={{ fontSize: 20, fontWeight: 550, }}>{username}</p>
             </span>
 
-            <img src={require('./logo.png')} style={{ height: 150, width: 300 }} />
+            <img src={require('./logo.png')} style={{ height: 150, width: 300, }} />
 
             <Button
                 style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1, }}

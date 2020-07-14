@@ -1,13 +1,7 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import {Button, TextField,  Container, makeStyles, withStyles } from '@material-ui/core';
 import { auth } from '../config';
+import background from '../Components/bg.jpg';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,10 +11,6 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
@@ -29,6 +19,19 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
+
+const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: '#000',
+      },
+      '& .MuiOutlinedInput-root': {
+        '&.Mui-focused fieldset': {
+          borderColor: '#e61f27',
+        },
+      },
+    },
+  })(TextField);
 
 function Login(useremail, userpassword, props) {
     console.log("Login Triggred");
@@ -52,54 +55,74 @@ export default function SignIn(props) {
 
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Mini Mini Garments
-        </Typography>
-                <form className={classes.form} noValidate >
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        autoFocus={true}
-                        required={true}
-                        value={email}
-                        onChange={event => {
-                            setEmail(event.target.value);
-                        }}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        label="Password"
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={event => setPassword(event.target.value)}
-                    />
 
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={(e) => { Login(email, password, props); e.preventDefault(); }}
-                    >
-                        Sign In
-          </Button>
+        <div>
 
-                </form>
+            <div style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: 'center',
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomStyle: 'solid'
+            }}>
+
+
+
+                <img src={require('../Components/logo.png')} style={{ height: 150, width: 300, }} />
+
             </div>
-        </Container>
+
+            <Container component="main" maxWidth="xs">
+
+
+                <div className={classes.paper}>
+
+                    <form className={classes.form} noValidate >
+                        <CssTextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            autoFocus={true}
+                            required={true}
+                            value={email}
+                            onChange={event => {
+                                setEmail(event.target.value);
+                            }}
+                        />
+                        <CssTextField
+                            variant="outlined"
+                            margin="normal"
+                            color="#e61f27"
+                            required
+                            fullWidth
+                            label="Password"
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={event => setPassword(event.target.value)}
+                        />
+
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1, }}
+                            className={classes.submit}
+                            onClick={(e) => { Login(email, password, props); e.preventDefault(); }}
+                        >
+                            Sign In
+                        </Button>
+
+                    </form>
+                </div>
+            </Container>
+
+            <div style={{width:'100%', backgroundColor:'#000', textAlign:'center', color:'#fff', bottom: 10, position:'absolute'}}>
+                CopyRights(c) by Mini Mini Garments
+            </div>
+        </div>
     );
 }

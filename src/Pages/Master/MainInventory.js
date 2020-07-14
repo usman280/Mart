@@ -297,7 +297,6 @@ export default function MainInventory() {
         .orderByChild("quantity")
         .on("value", (snapshot) => {
           let items = snapshot.val();
-          //setItemId(parseInt(items.length));
           console.log("Response", items);
 
           let newItemsList = [];

@@ -1,15 +1,14 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomTable from '../../../Components/CustomTable';
 import { database } from '../../../config';
-import Button from "@material-ui/core/Button";
-import AddCircle from "@material-ui/icons/AddCircle";
 import ShowDialogButton from '../../../Components/ShowDialogButton';
+import Header from '../../../Components/Header';
 
 export default function Shop3Inventory() {
 
-  const [ shop3Data, setShop3Data ] = useState([]);
+  const [shop3Data, setShop3Data] = useState([]);
 
-  useEffect( ()=> {
+  useEffect(() => {
     const fetchData = async () => {
       database
         .ref("shop3")
@@ -35,7 +34,7 @@ export default function Shop3Inventory() {
     };
 
     fetchData();
-  }, [] );
+  }, []);
 
   return (
     <div
@@ -48,8 +47,11 @@ export default function Shop3Inventory() {
         marginBottom: 50,
       }}
     >
+      <Header username="Hamza Khan" imageSource={require('../.././Master/hamza.jpg')} />
+
       <div
         style={{
+          marginTop: 20,
           display: "flex",
           flexDirection: "row",
           justifyContent: "flex-end",
