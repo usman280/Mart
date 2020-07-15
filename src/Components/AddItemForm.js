@@ -1,9 +1,20 @@
 import React, { useRef } from 'react';
-import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, withStyles } from '@material-ui/core'
 import ReactToPrint from "react-to-print";
-import QRCodeGenerator from '../Pages/QRCodeGenerator';
+import BarCodeGenerator from '../Pages/BarCodeGenerator';
 
-
+const CssTextField = withStyles({
+    root: {
+        '& label.Mui-focused': {
+            color: '#e61f27',
+        },
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: '#000',
+            },
+        },
+    },
+})(TextField);
 
 const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, quantity, onCancelClick, onAddItemClick, idHandler, nameHandler, priceHandler, quantityHandler }) => {
 
@@ -18,7 +29,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
         >
             <DialogTitle id="form-dialog-title">Enter Item Details</DialogTitle>
             <DialogContent style={{ marginBottom: 20 }}>
-                <TextField
+                <CssTextField
                     autoFocus
                     margin='normal'
                     id="itemid"
@@ -30,7 +41,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
                     autoComplete="off"
                     onChange={idHandler}
                 />
-                <TextField
+                <CssTextField
                     label="Item Name"
                     margin='normal'
                     id="itemname"
@@ -44,7 +55,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
                     onChange={nameHandler}
                     required
                 />
-                <TextField
+                <CssTextField
                     margin='normal'
                     id="price"
                     variant='outlined'
@@ -55,7 +66,7 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
                     autoComplete="off"
                     onChange={priceHandler}
                 />
-                <TextField
+                <CssTextField
                     margin='normal'
                     id="quantity"
                     variant='outlined'
@@ -70,20 +81,20 @@ const AddItemForm = ({ onAfterPrint, open, onClose, itemId, itemname, price, qua
 
             </DialogContent>
             <DialogActions>
-                <QRCodeGenerator ref={componentRef} value={itemId} />
+                <BarCodeGenerator ref={componentRef} value={itemId} />
                 <Button
+                    style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
                     variant="contained"
                     onClick={onCancelClick}
-                    color="primary"
                 >
                     Cancel
                 </Button>
                 <ReactToPrint
-                onBeforeGetContent={onAddItemClick}
+                    onBeforeGetContent={onAddItemClick}
                     trigger={() => <Button
                         variant="contained"
                         onClick={onAddItemClick}
-                        color="primary"
+                        style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
                     >
                         Add Item
                     </Button>}

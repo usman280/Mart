@@ -1,7 +1,6 @@
 import React from 'react';
-import {Button, TextField,  Container, makeStyles, withStyles } from '@material-ui/core';
-import { auth } from '../config';
-import background from '../Components/bg.jpg';
+import { Button, TextField, Container, makeStyles, withStyles } from '@material-ui/core';
+import { auth, database } from '../config';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,24 +21,44 @@ const useStyles = makeStyles((theme) => ({
 
 const CssTextField = withStyles({
     root: {
-      '& label.Mui-focused': {
-        color: '#000',
-      },
-      '& .MuiOutlinedInput-root': {
-        '&.Mui-focused fieldset': {
-          borderColor: '#e61f27',
+        '& label.Mui-focused': {
+            color: '#000',
         },
-      },
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: '#e61f27',
+            },
+        },
     },
-  })(TextField);
+})(TextField);
 
 function Login(useremail, userpassword, props) {
     console.log("Login Triggred");
 
     //SignupMethod
 
-    auth.createUserWithEmailAndPassword(useremail, userpassword).then(res => {
-        props.history.push('/Home')
+    auth.signInWithEmailAndPassword(useremail, userpassword).then(res => {
+
+        const userid = auth.currentUser.uid;
+        database.ref('users').child(userid).once("value", (snapshot) => {
+
+            const returnedRole = snapshot.val();
+
+            if (returnedRole.role === 'shop1') {
+                props.history.push('/Shop1Home')
+            }
+            else if (returnedRole.role === 'shop2') {
+                props.history.push('/Shop2Home')
+            }
+            else if (returnedRole.role === 'shop3') {
+                props.history.push('/Shop3Home')
+            }
+            else if (returnedRole.role === 'master') {
+                props.history.push('/Home')
+            }
+
+            console.log("value of snapshot", snapshot.val());
+        })
     }).catch(err => {
         console.log('error', err);
     })
@@ -120,7 +139,7 @@ export default function SignIn(props) {
                 </div>
             </Container>
 
-            <div style={{width:'100%', backgroundColor:'#000', textAlign:'center', color:'#fff', bottom: 10, position:'absolute'}}>
+            <div style={{ width: '100%', backgroundColor: '#000', textAlign: 'center', color: '#fff', bottom: 10, position: 'absolute' }}>
                 CopyRights(c) by Mini Mini Garments
             </div>
         </div>

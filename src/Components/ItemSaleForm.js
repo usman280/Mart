@@ -1,22 +1,9 @@
 import React, { useRef } from 'react';
-import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import {  Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import ReactToPrint from "react-to-print";
 import QrReader from 'react-qr-reader'
 
 
-// function mapList(props) {
-
-//     const list = props.list;
-
-//     list.map(item => {
-//         return (<div>
-//             <p>{item.itemId}</p>
-//             <p>{item.itemName}</p>
-//             <p>{item.price}</p>
-//         </div>
-//         )
-//     })
-// }
 
 const ItemSaleForm = ({ ItemsList=[], onAfterPrint, open, onClose, onCancelClick, onGenerateReceipt, QRScan, onError, result, delay, resolution }) => {
 

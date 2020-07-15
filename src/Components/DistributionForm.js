@@ -1,6 +1,19 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogActions, DialogContent, FormControl, FormControlLabel, Checkbox, Button, Typography, TextField, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, withStyles, DialogActions, DialogContent, FormControl, FormControlLabel, Checkbox, Button, Typography, TextField, makeStyles } from '@material-ui/core';
 
+
+const CssTextField = withStyles({
+    root: {
+        '& label.Mui-focused': {
+            color: '#e61f27',
+        },
+        '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+                borderColor: '#000',
+            },
+        },
+    },
+})(TextField);
 
 const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check, checkBoxHandler, onClose, onCancelClick, error, onDistributeClick, itemId, idHandler, quantity, quantityHandler }) => {
 
@@ -15,7 +28,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
         >
             <DialogTitle id="form-dialog-title">Enter Item Details</DialogTitle>
             <DialogContent style={{ marginBottom: 20 }}>
-                <TextField
+                <CssTextField
                     variant='outlined'
 
                     autoFocus
@@ -75,7 +88,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                         label="Shop 4"
                     />
                 </FormControl>
-                <TextField
+                <CssTextField
                     variant='outlined'
                     margin="normal"
                     id="quantity"
@@ -90,7 +103,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
             </DialogContent>
             <DialogActions>
                 <Button
-                    style={{ alignSelf: 'flex-start' }}
+                    style={{ alignSelf: 'flex-start', backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
                     variant="contained"
                     onClick={onCancelClick}
                     color="primary"
@@ -100,7 +113,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                 <Button
                     variant="contained"
                     onClick={onDistributeClick}
-                    color="primary"
+                    style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
                 >
                     Distribute
       </Button>
