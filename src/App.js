@@ -14,19 +14,15 @@ import Shop1Inventory from './Pages/ShopView/Shop1/Shop1Inventory';
 import Shop2Inventory from './Pages/ShopView/Shop2/Shop2Inventory';
 import Shop3Inventory from './Pages/ShopView/Shop3/Shop3Inventory';
 import Shop4Inventory from './Pages/ShopView/Shop4/Shop4Inventory';
-import CustomTable from './Components/CustomTable';
 import MainInventory from "./Pages/Master/MainInventory";
 
 import Shop1Sales from "./Pages/ShopView/Shop1/Shop1Sales";
-import Shop1Sales from "./Pages/ShopView/Shop2/Shop2Sales";
-import Shop1Sales from "./Pages/ShopView/Shop3/Shop3Sales";
-import Shop1Sales from "./Pages/ShopView/Shop4/Shop4Sales";
+import Shop2Sales from "./Pages/ShopView/Shop2/Shop2Sales";
+import Shop3Sales from "./Pages/ShopView/Shop3/Shop3Sales";
+import Shop4Sales from "./Pages/ShopView/Shop4/Shop4Sales";
 
 
 import SignupPage from './Pages/SignupPage';
-import Shop4Sales from "./Pages/ShopView/Shop4/Shop4Sales";
-import Shop3Sales from "./Pages/ShopView/Shop3/Shop3Sales";
-import Shop2Sales from "./Pages/ShopView/Shop2/Shop2Sales";
 
 class App extends React.Component {
 
