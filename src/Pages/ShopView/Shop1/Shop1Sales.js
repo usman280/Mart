@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
-import CustomTable from '../../../Components/CustomTable';
+import React, { useState, useEffect, useRef } from 'react';
 import { database } from '../../../config';
-import AddCircle from "@material-ui/icons/AddCircle";
 import ShowDialogButton from '../../../Components/ShowDialogButton';
 
-import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@material-ui/core'
 import ReactToPrint from "react-to-print";
 import Quagga from 'quagga';
+import SalesTable from '../../../Components/SalesTable';
 
 
 export default function Shop1Sales() {
 
 
   const componentRef = useRef();
-  const nameRef = useRef();
 
   const [shop1Data, setShop1Data] = useState([]);
   const [open, setOpen] = useState(false);
@@ -22,6 +20,7 @@ export default function Shop1Sales() {
   const [codes, setCodes] = useState([]);
   const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
+  const [quantity, setQuantity] = useState(0); 
 
 
   useEffect(() => {
@@ -34,23 +33,42 @@ export default function Shop1Sales() {
       database
         .ref("shop1")
         .child("Sales")
-        .orderByChild("quantity")
         .on("value", (snapshot) => {
-          let items = snapshot.val();
-          //setItemId(items.length);
-          console.log("Response", items);
 
-          let newItemsList = [];
-          for (let item in items) {
-            newItemsList.push({
-              itemid: items[item].itemid,
-              itemname: items[item].itemname,
-              price: items[item].price,
-              quantity: items[item].quantity,
+          let finalReceipt = [];
+
+          snapshot.forEach(function (childSnapshot) {
+            var childKey = childSnapshot.key;
+            var childData = childSnapshot.val();
+
+            console.log("Itemid:", childKey, "Data", childData);
+
+            let items = childSnapshot.val();
+            let singleReceiptItems = [];
+
+
+            for (let item in items) {
+              singleReceiptItems.push({
+                itemid: items[item].itemid,
+                itemname: items[item].itemname,
+                price: items[item].price,
+                quantity: items[item].quantity
+              });
+            }
+
+            finalReceipt.push({
+              saleid: childKey,
+              receipt: singleReceiptItems
             });
-          }
 
-          setShop1Data(newItemsList);
+            console.log('final receipt', finalReceipt);
+
+            const retrievedData = [...finalReceipt];
+
+            setShop1Data(retrievedData);
+
+          });
+
         });
     };
 
@@ -123,6 +141,10 @@ export default function Shop1Sales() {
     Quagga.onDetected(onDetectedHandler);
   }
 
+  function generateReceipt() {
+    database.ref("shop1").child("Sales").push(receipt);
+  }
+
   const mapList = () => receipt.map(
     function (item, index) {
       return (
@@ -130,7 +152,16 @@ export default function Shop1Sales() {
           <p>{item.itemid}</p>
           <p>{item.itemname}</p>
           <p>{item.price}</p>
-          <p>{item.quantity}</p>
+          <TextField
+                    margin='normal'
+                    id="quantity"
+                    variant='outlined'
+                    value={quantity}
+                    label="Quantity"
+                    type="number"
+                    autoComplete="off"
+                    onChange={(e)=> setQuantity(e.target.value)}
+                />
         </div>
       )
     }
@@ -184,11 +215,11 @@ export default function Shop1Sales() {
               <p>Address: Madina City Mall Saddar</p>
             </div>) : null}
 
-            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center', background:'#000' }}>
-              <p style={{fontSize: 15, color:'#fff'}}>Item Id</p>
-              <p style={{fontSize: 15, color:'#fff'}}>Item Name</p>
-              <p style={{fontSize: 15, color:'#fff'}}>Item Price</p>
-              <p style={{fontSize: 15, color:'#fff'}}>Item Quantity</p>
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center', background: '#000' }}>
+              <p style={{ fontSize: 15, color: '#fff' }}>Item Id</p>
+              <p style={{ fontSize: 15, color: '#fff' }}>Item Name</p>
+              <p style={{ fontSize: 15, color: '#fff' }}>Item Price</p>
+              <p style={{ fontSize: 15, color: '#fff' }}>Item Quantity</p>
             </div>
             <div>
               {mapList()}
@@ -214,6 +245,7 @@ export default function Shop1Sales() {
                     </Button>}
             onBeforeGetContent={() => {
               setPrint(true);
+              generateReceipt();
               return Promise.resolve();
             }}
             onAfterPrint={() => setPrint(false)}
@@ -224,8 +256,8 @@ export default function Shop1Sales() {
         </DialogActions>
       </Dialog>
 
-      <CustomTable
-        mytitle="Shop 1 Inventory"
+      <SalesTable
+        mytitle="Shop 1 Sales"
         mydata={shop1Data}
       />
 

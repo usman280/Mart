@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles, AppBar, Tabs, Tab, Box } from '@material-ui/core';
-import Sales from "../Sales";
 import Shops from "./Shops";
 import Accounts from "./Accounts";
 import MainInventory from "./MainInventory";

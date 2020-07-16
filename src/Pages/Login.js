@@ -53,8 +53,11 @@ function Login(useremail, userpassword, props) {
             else if (returnedRole.role === 'shop3') {
                 props.history.push('/Shop3Home')
             }
+            else if (returnedRole.role === 'shop4') {
+                props.history.push('/Shop3Home')
+            }
             else if (returnedRole.role === 'master') {
-                props.history.push('/Home')
+                props.history.push('/MasterHome')
             }
 
             console.log("value of snapshot", snapshot.val());

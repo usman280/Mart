@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, withStyles } from '@material-ui/core'
 import ReactToPrint from "react-to-print";
-import BarCodeGenerator from '../Pages/BarCodeGenerator';
+import BarCodeGenerator from './BarCodeGenerator';
 
 const CssTextField = withStyles({
     root: {
