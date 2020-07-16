@@ -20,7 +20,7 @@ export default function Shop3Sales() {
   const [codes, setCodes] = useState([]);
   const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
-  const [quantity, setQuantity] = useState(0); 
+  const [quantity, setQuantity] = useState([]);
 
 
   useEffect(() => {
@@ -94,7 +94,13 @@ export default function Shop3Sales() {
 
         database.ref('shop3').child("Inventory").child(path).on("value", (snapshot) => {
 
-          list.push(snapshot.val());
+          let newdetails = {
+            itemid: snapshot.child('itemid').val(),
+            itemname: snapshot.child('itemname').val(),
+            price: snapshot.child('quantity').val(),
+          }
+
+          list.push(newdetails);
           const newlist = [...list];
           setReceipt(newlist);
         });
@@ -142,6 +148,13 @@ export default function Shop3Sales() {
   }
 
   function generateReceipt() {
+    let i = 0;
+    receipt.forEach(function (input) {
+      if (i < receipt.length) {
+        input.quantity = quantity[i];
+        i += 1;
+      }
+    });
     database.ref("shop3").child("Sales").push(receipt);
   }
 
@@ -149,20 +162,20 @@ export default function Shop3Sales() {
     function (item, index) {
       return (
         <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }} key={index}>
-          <p>{item.itemid}</p>
-          <p>{item.itemname}</p>
-          <p>{item.price}</p>
-          <TextField
-                    margin='normal'
-                    id="quantity"
-                    variant='outlined'
-                    value={quantity}
-                    label="Quantity"
-                    type="number"
-                    autoComplete="off"
-                    onChange={(e)=> setQuantity(e.target.value)}
-                />
-        </div>
+        <p>{item.itemid}</p>
+        <p>{item.itemname}</p>
+        <p>{item.price}</p>
+        {print ? <p>{quantity[index]}</p> : <TextField
+          margin='normal'
+          id="quantity"
+          variant='outlined'
+          value={quantity[index]}
+          label="Quantity"
+          type="number"
+          autoComplete="off"
+          onChange={(e) => quantity[index] = e.target.value}
+        />}
+      </div>
       )
     }
   )
