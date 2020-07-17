@@ -21,13 +21,15 @@ export default function Shop1Sales() {
   const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
   const [quantity, setQuantity] = useState([]);
-
+  const [InventoryData, setInventoryData] = useState([]);
+  const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
+  const [previousQuantities] = useState([]);
 
   useEffect(() => {
 
 
     onDetectedHandler = onDetectedHandler.bind(this);
-    console.log("value kia ha", scanning);
+
 
     const fetchData = async () => {
       database
@@ -41,7 +43,6 @@ export default function Shop1Sales() {
             var childKey = childSnapshot.key;
             var childData = childSnapshot.val();
 
-            console.log("Itemid:", childKey, "Data", childData);
 
             let items = childSnapshot.val();
             let singleReceiptItems = [];
@@ -61,7 +62,6 @@ export default function Shop1Sales() {
               receipt: singleReceiptItems
             });
 
-            console.log('final receipt', finalReceipt);
 
             const retrievedData = [...finalReceipt];
 
@@ -72,13 +72,37 @@ export default function Shop1Sales() {
         });
     };
 
+    const fetchShopData = async () => {
+
+      database
+        .ref("shop1")
+        .child("Inventory")
+        .orderByChild("quantity")
+        .on("value", (snapshot) => {
+          let items = snapshot.val();
+
+          let ShopList = [];
+          for (let item in items) {
+            ShopList.push({
+              itemid: items[item].itemid,
+              itemname: items[item].itemname,
+              price: items[item].price,
+              quantity: items[item].quantity,
+            });
+          }
+          setInventoryData(ShopList);
+        });
+    };
+
+    fetchShopData();
     fetchData();
   }, []);
 
 
 
   var onDetectedHandler = (result) => {
-    Quagga.offDetected()
+    Quagga.offDetected();
+
 
     console.log("Codes", codes);
 
@@ -94,16 +118,24 @@ export default function Shop1Sales() {
 
         database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
 
+          const detecteditemquantity = snapshot.child('quantity').val();
+          console.log("quan", detecteditemquantity);
+
 
           let newdetails = {
             itemid: snapshot.child('itemid').val(),
             itemname: snapshot.child('itemname').val(),
-            price: snapshot.child('quantity').val(),
+            price: snapshot.child('price').val(),
           }
+
+          previousQuantities.push(parseInt(detecteditemquantity));
 
           list.push(newdetails);
           const newlist = [...list];
           setReceipt(newlist);
+          const newQuantities = [...previousQuantities]
+          setItemsPreviousQuantity(newQuantities);
+
         });
       }
     }
@@ -149,18 +181,25 @@ export default function Shop1Sales() {
   }
 
   function generateReceipt() {
+
     let i = 0;
     receipt.forEach(function (input) {
       if (i < receipt.length) {
-        input.quantity = quantity[i];
-        i += 1;
+        input.quantity = parseInt(quantity[i]);
+
+        const modifyQuantity = {
+          quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
+        }
+
+        i+=1;
+       database.ref("shop1").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
     database.ref("shop1").child("Sales").push(receipt);
   }
 
   const mapList = () => receipt.map(
-    function (item, index, receipt) {
+    function (item, index) {
       return (
         <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }} key={index}>
           <p>{item.itemid}</p>

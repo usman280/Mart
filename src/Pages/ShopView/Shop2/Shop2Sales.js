@@ -21,6 +21,8 @@ export default function Shop2Sales() {
   const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
   const [quantity, setQuantity] = useState([]);
+  const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
+  const [previousQuantities] = useState([]);
 
 
   useEffect(() => {
@@ -93,15 +95,22 @@ export default function Shop2Sales() {
 
         database.ref('shop2').child("Inventory").child(path).on("value", (snapshot) => {
 
+
+          const detecteditemquantity = snapshot.child('quantity').val();
+
+          previousQuantities.push(parseInt(detecteditemquantity));
+
           let newdetails = {
             itemid: snapshot.child('itemid').val(),
             itemname: snapshot.child('itemname').val(),
-            price: snapshot.child('quantity').val(),
+            price: snapshot.child('price').val(),
           }
 
           list.push(newdetails);
           const newlist = [...list];
           setReceipt(newlist);
+          const newQuantities = [...previousQuantities]
+          setItemsPreviousQuantity(newQuantities);
         });
       }
     }
@@ -151,7 +160,14 @@ export default function Shop2Sales() {
     receipt.forEach(function (input) {
       if (i < receipt.length) {
         input.quantity = quantity[i];
+
+        const modifyQuantity = {
+          quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
+        }
+
         i += 1;
+        database.ref("shop2").child("Inventory").child(input.itemid).set(modifyQuantity);
+        
       }
     });
     database.ref("shop2").child("Sales").push(receipt);
@@ -161,7 +177,7 @@ export default function Shop2Sales() {
     function (item, index) {
       return (
         <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }} key={index}>
-          <p>{item.itemid}</p>
+          <p>{receipt.length}</p>
           <p>{item.itemname}</p>
           <p>{item.price}</p>
           {print ? <p>{quantity[index]}</p> : <TextField
@@ -256,8 +272,8 @@ export default function Shop2Sales() {
               Generate Receipt
                     </Button>}
             onBeforeGetContent={() => {
-              setPrint(true);
               generateReceipt();
+              setPrint(true);
               return Promise.resolve();
             }}
             onAfterPrint={() => setPrint(false)}

@@ -97,7 +97,7 @@ export default function Shop4Sales() {
           let newdetails = {
             itemid: snapshot.child('itemid').val(),
             itemname: snapshot.child('itemname').val(),
-            price: snapshot.child('quantity').val(),
+            price: snapshot.child('price').val(),
           }
 
           list.push(newdetails);
