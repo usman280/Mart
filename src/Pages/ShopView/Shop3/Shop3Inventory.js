@@ -103,7 +103,6 @@ export default function Shop3Inventory() {
         marginBottom: 50,
       }}
     >
-      <Header username="Hamza Khan" imageSource={require('../.././Master/hamza.jpg')} />
 
       <div
         style={{
