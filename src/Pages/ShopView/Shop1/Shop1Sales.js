@@ -100,45 +100,51 @@ export default function Shop1Sales() {
 
 
 
+
+
   var onDetectedHandler = (result) => {
     Quagga.offDetected();
 
+    InventoryData.forEach(function (item) {
+      console.log(item.itemid);
+      const resultval = parseInt(result.codeResult.code);
+      if (item.itemid == resultval) {
+        if (codes.includes(result.codeResult.code)) {
+          window.alert("Already Scanned");
+        }
+        else {
+          const itemid = result.codeResult.code;
+          codes.push(itemid);
 
-    console.log("Codes", codes);
+          if (typeof (result) !== "number") {
+            const path = itemid.toString();
 
-    if (codes.includes(result.codeResult.code)) {
-      window.alert("Already Scanned");
-    }
-    else {
-      const itemid = result.codeResult.code;
-      codes.push(itemid);
+            database.ref('shop1').child("Inventory").child(path).once("value", (snapshot) => {
 
-      if (typeof (result) !== 'number') {
-        const path = itemid.toString();
-
-        database.ref('shop1').child("Inventory").child(path).on("value", (snapshot) => {
-
-          const detecteditemquantity = snapshot.child('quantity').val();
-          console.log("quan", detecteditemquantity);
+              const detecteditemquantity = snapshot.child('quantity').val();
+              console.log("quan", detecteditemquantity);
 
 
-          let newdetails = {
-            itemid: snapshot.child('itemid').val(),
-            itemname: snapshot.child('itemname').val(),
-            price: snapshot.child('price').val(),
+              let newdetails = {
+                itemid: snapshot.child('itemid').val(),
+                itemname: snapshot.child('itemname').val(),
+                price: snapshot.child('price').val(),
+              }
+
+              previousQuantities.push(parseInt(detecteditemquantity));
+
+              list.push(newdetails);
+              const newlist = [...list];
+              setReceipt(newlist);
+              const newQuantities = [...previousQuantities]
+              setItemsPreviousQuantity(newQuantities);
+
+            });
           }
+        }
 
-          previousQuantities.push(parseInt(detecteditemquantity));
-
-          list.push(newdetails);
-          const newlist = [...list];
-          setReceipt(newlist);
-          const newQuantities = [...previousQuantities]
-          setItemsPreviousQuantity(newQuantities);
-
-        });
       }
-    }
+    })
     setTimeout(() => {
       Quagga.start();
       Quagga.onDetected(onDetectedHandler)
@@ -191,8 +197,8 @@ export default function Shop1Sales() {
           quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
         }
 
-        i+=1;
-       database.ref("shop1").child("Inventory").child(input.itemid).update(modifyQuantity);
+        i += 1;
+        database.ref("shop1").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
     database.ref("shop1").child("Sales").push(receipt);

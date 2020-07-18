@@ -21,13 +21,15 @@ export default function Shop4Sales() {
   const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
   const [quantity, setQuantity] = useState([]);
-
+  const [InventoryData, setInventoryData] = useState([]);
+  const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
+  const [previousQuantities] = useState([]);
 
   useEffect(() => {
 
 
     onDetectedHandler = onDetectedHandler.bind(this);
-    console.log("value kia ha", scanning);
+
 
     const fetchData = async () => {
       database
@@ -41,7 +43,6 @@ export default function Shop4Sales() {
             var childKey = childSnapshot.key;
             var childData = childSnapshot.val();
 
-            console.log("Itemid:", childKey, "Data", childData);
 
             let items = childSnapshot.val();
             let singleReceiptItems = [];
@@ -61,7 +62,6 @@ export default function Shop4Sales() {
               receipt: singleReceiptItems
             });
 
-            console.log('final receipt', finalReceipt);
 
             const retrievedData = [...finalReceipt];
 
@@ -72,40 +72,79 @@ export default function Shop4Sales() {
         });
     };
 
+    const fetchShopData = async () => {
+
+      database
+        .ref("shop4")
+        .child("Inventory")
+        .orderByChild("quantity")
+        .on("value", (snapshot) => {
+          let items = snapshot.val();
+
+          let ShopList = [];
+          for (let item in items) {
+            ShopList.push({
+              itemid: items[item].itemid,
+              itemname: items[item].itemname,
+              price: items[item].price,
+              quantity: items[item].quantity,
+            });
+          }
+          setInventoryData(ShopList);
+        });
+    };
+
+    fetchShopData();
     fetchData();
   }, []);
 
 
 
+
+
   var onDetectedHandler = (result) => {
-    Quagga.offDetected()
+    Quagga.offDetected();
 
-    console.log("Codes", codes);
+    InventoryData.forEach(function (item) {
+      console.log(item.itemid);
+      const resultval = parseInt(result.codeResult.code);
+      if (item.itemid == resultval) {
+        if (codes.includes(result.codeResult.code)) {
+          window.alert("Already Scanned");
+        }
+        else {
+          const itemid = result.codeResult.code;
+          codes.push(itemid);
 
-    if (codes.includes(result.codeResult.code)) {
-      window.alert("Already Scanned");
-    }
-    else {
-      const itemid = result.codeResult.code;
-      codes.push(itemid);
+          if (typeof (result) !== "number") {
+            const path = itemid.toString();
 
-      if (result && result !== null) {
-        const path = itemid.toString();
+            database.ref('shop4').child("Inventory").child(path).once("value", (snapshot) => {
 
-        database.ref('shop4').child("Inventory").child(path).on("value", (snapshot) => {
+              const detecteditemquantity = snapshot.child('quantity').val();
+              console.log("quan", detecteditemquantity);
 
-          let newdetails = {
-            itemid: snapshot.child('itemid').val(),
-            itemname: snapshot.child('itemname').val(),
-            price: snapshot.child('price').val(),
+
+              let newdetails = {
+                itemid: snapshot.child('itemid').val(),
+                itemname: snapshot.child('itemname').val(),
+                price: snapshot.child('price').val(),
+              }
+
+              previousQuantities.push(parseInt(detecteditemquantity));
+
+              list.push(newdetails);
+              const newlist = [...list];
+              setReceipt(newlist);
+              const newQuantities = [...previousQuantities]
+              setItemsPreviousQuantity(newQuantities);
+
+            });
           }
+        }
 
-          list.push(newdetails);
-          const newlist = [...list];
-          setReceipt(newlist);
-        });
       }
-    }
+    })
     setTimeout(() => {
       Quagga.start();
       Quagga.onDetected(onDetectedHandler)
@@ -148,11 +187,18 @@ export default function Shop4Sales() {
   }
 
   function generateReceipt() {
+
     let i = 0;
     receipt.forEach(function (input) {
       if (i < receipt.length) {
-        input.quantity = quantity[i];
+        input.quantity = parseInt(quantity[i]);
+
+        const modifyQuantity = {
+          quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
+        }
+
         i += 1;
+        database.ref("shop4").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
     database.ref("shop4").child("Sales").push(receipt);
