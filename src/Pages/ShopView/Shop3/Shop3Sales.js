@@ -247,7 +247,7 @@ export default function Shop3Sales() {
         }}
       >
 
-        <ShowDialogButton onClick={() => {
+        <ShowDialogButton DialogTex="New Sale" onClick={() => {
           setOpen(true);
           setTimeout(() => {
             startScanning(navigator.hardwareConcurrency);

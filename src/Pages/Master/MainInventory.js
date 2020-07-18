@@ -187,7 +187,6 @@ export default function MainInventory() {
     let shop3list = shop3data;
     let shop4list = shop4data;
 
-    console.log("wot is", items);
 
     for (let item in items) {
       if (e.target.value === items[item].itemid) {
