@@ -16,14 +16,13 @@ export default function Shop1Sales() {
   const [shop1Data, setShop1Data] = useState([]);
   const [open, setOpen] = useState(false);
   const [receipt, setReceipt] = useState([]);
-  const [list] = useState([]);
+  const [list, setList] = useState([]);
   const [codes, setCodes] = useState([]);
-  const [scanning, setScanning] = useState(false);
   const [print, setPrint] = useState(false);
   const [quantity, setQuantity] = useState([]);
   const [InventoryData, setInventoryData] = useState([]);
   const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
-  const [previousQuantities] = useState([]);
+  const [previousQuantities, setPreviousQuantities] = useState([]);
 
   useEffect(() => {
 
@@ -106,7 +105,6 @@ export default function Shop1Sales() {
     Quagga.offDetected();
 
     InventoryData.forEach(function (item) {
-      console.log(item.itemid);
       const resultval = parseInt(result.codeResult.code);
       if (item.itemid == resultval) {
         if (codes.includes(result.codeResult.code)) {
@@ -116,31 +114,29 @@ export default function Shop1Sales() {
           const itemid = result.codeResult.code;
           codes.push(itemid);
 
-          if (typeof (result) !== "number") {
-            const path = itemid.toString();
+          const path = itemid.toString();
 
-            database.ref('shop1').child("Inventory").child(path).once("value", (snapshot) => {
+          database.ref('shop1').child("Inventory").child(path).once("value", (snapshot) => {
 
-              const detecteditemquantity = snapshot.child('quantity').val();
-              console.log("quan", detecteditemquantity);
+            const detecteditemquantity = snapshot.child('quantity').val();
 
+            let newdetails = {
+              itemid: snapshot.child('itemid').val(),
+              itemname: snapshot.child('itemname').val(),
+              price: snapshot.child('price').val(),
+              shopquantity: snapshot.child('quantity').val(),
+            }
 
-              let newdetails = {
-                itemid: snapshot.child('itemid').val(),
-                itemname: snapshot.child('itemname').val(),
-                price: snapshot.child('price').val(),
-              }
+            previousQuantities.push(parseInt(detecteditemquantity));
 
-              previousQuantities.push(parseInt(detecteditemquantity));
+            list.push(newdetails);
+            const newlist = [...list];
+            setReceipt(newlist);
+            const newQuantities = [...previousQuantities]
+            setItemsPreviousQuantity(newQuantities);
 
-              list.push(newdetails);
-              const newlist = [...list];
-              setReceipt(newlist);
-              const newQuantities = [...previousQuantities]
-              setItemsPreviousQuantity(newQuantities);
+          });
 
-            });
-          }
         }
 
       }
@@ -202,6 +198,12 @@ export default function Shop1Sales() {
       }
     });
     database.ref("shop1").child("Sales").push(receipt);
+
+
+    setItemsPreviousQuantity([]);
+    setPreviousQuantities([]);
+    setCodes([]);
+    setList([]);
   }
 
   const mapList = () => receipt.map(
@@ -219,7 +221,21 @@ export default function Shop1Sales() {
             label="Quantity"
             type="number"
             autoComplete="off"
-            onChange={(e) => quantity[index] = e.target.value}
+            onChange={(e) => {
+              let checker = receipt;
+
+              for (let check in checker) {
+                if (item.itemid === checker[check].itemid) {
+                  if (e.target.value <= checker[check].shopquantity) {
+                    quantity[index] = e.target.value
+                  }
+                  else {
+                    window.alert("Not Enough Stock Available");
+                    e.target.value = 0;
+                  }
+                }
+              }
+            }}
           />}
         </div>
       )
@@ -261,7 +277,6 @@ export default function Shop1Sales() {
         onClose={() => { setOpen(false); stopScanning(); }}
         fullScreen={true}
       >
-        <DialogTitle id="form-dialog-title">Enter Item Details</DialogTitle>
         <DialogContent style={{ marginBottom: 20, height: 200 }}>
 
           <div style={{ display: 'flex', flex: 1, flexDirection: 'column', height: 250, alignItems: 'center' }} className="input-stream"></div>
@@ -290,7 +305,7 @@ export default function Shop1Sales() {
           <Button
             variant="contained"
             onClick={() => { setOpen(false); stopScanning(); }}
-            color="primary"
+            style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
           >
             Cancel
                 </Button>
@@ -298,7 +313,7 @@ export default function Shop1Sales() {
           <ReactToPrint
             trigger={() => <Button
               variant="contained"
-              color="primary"
+              style={{ backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
             >
               Generate Receipt
                     </Button>}
@@ -307,7 +322,7 @@ export default function Shop1Sales() {
               generateReceipt();
               return Promise.resolve();
             }}
-            onAfterPrint={() => setPrint(false)}
+            onAfterPrint={() => { setPrint(false); setReceipt([]); setQuantity([]); setOpen(false); }}
             documentTitle={"Mini Mini Garments"}
             content={() => componentRef.current}
           />

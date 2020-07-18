@@ -70,114 +70,131 @@ export default function MainInventory() {
     const quan = parseInt(quantity);
     let num = 0;
 
-    setDistributionDialog(false);
-
     for (let [key, value] of Object.entries(state)) {
-      if (key === "shop1" && value === true) {
-        const prev = parseInt(Shop1PreviousQuantity);
-
-        const subInventoryDetails = {
-          itemid: itemId,
-          itemname: itemname,
-          price: price,
-          quantity: prev + quan,
-        };
-
-        database
-          .ref(key)
-          .child("Inventory")
-          .child(itemId)
-          .update(subInventoryDetails)
-          .then((res) => {
-            console.log("Distributed to", key);
-          });
-        num = num + 1;
-      }
-
-      if (key === "shop2" && value === true) {
-        const prev = parseInt(Shop2PreviousQuantity);
-
-        const subInventoryDetails = {
-          itemid: itemId,
-          itemname: itemname,
-          price: price,
-          quantity: prev + quan,
-        };
-
-        database
-          .ref(key)
-          .child("Inventory")
-          .child(itemId)
-          .update(subInventoryDetails)
-          .then((res) => {
-            console.log("Distributed to", key);
-          });
-        num = num + 1;
-      }
-
-      if (key === "shop3" && value === true) {
-        const prev = parseInt(Shop3PreviousQuantity);
-
-        const subInventoryDetails = {
-          itemid: itemId,
-          itemname: itemname,
-          price: price,
-          quantity: prev + quan,
-        };
-
-        database
-          .ref(key)
-          .child("Inventory")
-          .child(itemId)
-          .update(subInventoryDetails)
-          .then((res) => {
-            console.log("Distributed to", key);
-          });
-        num = num + 1;
-      }
-
-      if (key === "shop4" && value === true) {
-        const prev = parseInt(Shop4PreviousQuantity);
-
-        const subInventoryDetails = {
-          itemid: itemId,
-          itemname: itemname,
-          price: price,
-          quantity: prev + quan,
-        };
-
-        database
-          .ref(key)
-          .child("Inventory")
-          .child(itemId)
-          .update(subInventoryDetails)
-          .then((res) => {
-            console.log("Distributed to", key);
-          });
-        num = num + 1;
+      if (value === true) {
+        num += 1;
       }
     }
+    setDistributionDialog(false);
 
-    const mainInventorydetails = {
-      quantity: prevquan - num * quan,
-    };
+    if ((quan * num) > prevquan) {
+      window.alert("Not Enough Stock Available");
+    }
+    else {
+      for (let [key, value] of Object.entries(state)) {
 
-    database
-      .ref("Inventory")
-      .child(itemId)
-      .update(mainInventorydetails)
-      .then((res) => {
-        console.log("Deducted from Main Inventory");
-        setItemId("");
-        setItemName("");
-        setPrice("");
-        setQuantity("");
-        setShop1PreviousQuantity(0);
-        setShop2PreviousQuantity(0);
-        setShop3PreviousQuantity(0);
-        setShop4PreviousQuantity(0);
-        setState({ shop1: false, shop2: false, shop3: false, shop4: false });
-      });
+
+        if (key === "shop1" && value === true) {
+          const prev = parseInt(Shop1PreviousQuantity);
+          const subInventoryDetails = {
+            itemid: itemId,
+            itemname: itemname,
+            price: price,
+            quantity: prev + quan,
+          };
+
+          database
+            .ref(key)
+            .child("Inventory")
+            .child(itemId)
+            .update(subInventoryDetails)
+            .then((res) => {
+              console.log("Distributed to", key);
+            });
+          // num = num + 1;
+
+
+
+        }
+
+        if (key === "shop2" && value === true) {
+          const prev = parseInt(Shop2PreviousQuantity);
+
+          const subInventoryDetails = {
+            itemid: itemId,
+            itemname: itemname,
+            price: price,
+            quantity: prev + quan,
+          };
+
+          database
+            .ref(key)
+            .child("Inventory")
+            .child(itemId)
+            .update(subInventoryDetails)
+            .then((res) => {
+              console.log("Distributed to", key);
+            });
+          //num = num + 1;
+        }
+
+        if (key === "shop3" && value === true) {
+          const prev = parseInt(Shop3PreviousQuantity);
+
+          const subInventoryDetails = {
+            itemid: itemId,
+            itemname: itemname,
+            price: price,
+            quantity: prev + quan,
+          };
+
+          database
+            .ref(key)
+            .child("Inventory")
+            .child(itemId)
+            .update(subInventoryDetails)
+            .then((res) => {
+              console.log("Distributed to", key);
+            });
+          //num = num + 1;
+        }
+
+        if (key === "shop4" && value === true) {
+          const prev = parseInt(Shop4PreviousQuantity);
+
+          const subInventoryDetails = {
+            itemid: itemId,
+            itemname: itemname,
+            price: price,
+            quantity: prev + quan,
+          };
+
+          database
+            .ref(key)
+            .child("Inventory")
+            .child(itemId)
+            .update(subInventoryDetails)
+            .then((res) => {
+              console.log("Distributed to", key);
+            });
+          // num = num + 1;
+        }
+
+
+
+      }
+      const mainInventorydetails = {
+        quantity: prevquan - num * quan,
+      };
+
+      database
+        .ref("Inventory")
+        .child(itemId)
+        .update(mainInventorydetails)
+        .then((res) => {
+          console.log("Deducted from Main Inventory");
+          setItemId("");
+          setItemName("");
+          setPrice("");
+          setQuantity("");
+          setShop1PreviousQuantity(0);
+          setShop2PreviousQuantity(0);
+          setShop3PreviousQuantity(0);
+          setShop4PreviousQuantity(0);
+          setState({ shop1: false, shop2: false, shop3: false, shop4: false });
+        });
+    }
+
   }
 
   const handleItemId = (e) => {
@@ -374,7 +391,7 @@ export default function MainInventory() {
         }}
       >
         <Button
-          style={{ marginBottom: 10, backgroundColor:'#e61f27', color:'#fff', opacity: 0.9, letterSpacing: 1 }}
+          style={{ marginBottom: 10, backgroundColor: '#e61f27', color: '#fff', opacity: 0.9, letterSpacing: 1 }}
           onClick={() => {
             setDistributionDialog(true);
           }}
