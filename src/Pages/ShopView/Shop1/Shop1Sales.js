@@ -192,13 +192,14 @@ export default function Shop1Sales() {
         const modifyQuantity = {
           quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
         }
+        
+
 
         i += 1;
         database.ref("shop1").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
     database.ref("shop1").child("Sales").push(receipt);
-
 
     setItemsPreviousQuantity([]);
     setPreviousQuantities([]);

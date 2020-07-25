@@ -7,6 +7,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Shop1Sales from './Shop1Sales';
 import Shop1Inventory from './Shop1Inventory';
+import Shop1Accounts from "./Shop1Accounts";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -92,6 +93,10 @@ export default function Shop1Home(props) {
                         className={value === 1 ? classes.activetab : null}
                         label="Inventory"
                     />
+                    <LinkTab
+                        className={value === 2 ? classes.activetab : null}
+                        label="Accounts"
+                    />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
@@ -99,6 +104,9 @@ export default function Shop1Home(props) {
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <Shop1Inventory />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                <Shop1Accounts />
             </TabPanel>
         </div>
     );

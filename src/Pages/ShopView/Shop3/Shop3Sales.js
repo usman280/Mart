@@ -10,6 +10,20 @@ import SalesTable from '../../../Components/SalesTable';
 
 export default function Shop3Sales() {
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const componentRef = useRef();
 
@@ -23,6 +37,7 @@ export default function Shop3Sales() {
   const [InventoryData, setInventoryData] = useState([]);
   const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
   const [previousQuantities, setPreviousQuantities] = useState([]);
+  const [saleAmount, setSaleAmount] = useState(0);
 
   useEffect(() => {
 
@@ -183,6 +198,17 @@ export default function Shop3Sales() {
   }
 
   function generateReceipt() {
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth() + 1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
+
+    var strdate = Day + "-" + Month + "-" + Year;
+    /// console.log(monthNames[Month]);
+
+    let totalamount = 0;
+
+
 
     let i = 0;
     receipt.forEach(function (input) {
@@ -193,10 +219,19 @@ export default function Shop3Sales() {
           quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
         }
 
+        totalamount = totalamount + (input.quantity * input.price);
+
         i += 1;
         database.ref("shop3").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
+
+    const saledetail = {
+      sale: totalamount + saleAmount
+    }
+
+    console.log(saledetail);
+    database.ref("shop3").child("Accounts").child(monthNames[Month - 1]).child(strdate).update(saledetail);
     database.ref("shop3").child("Sales").push(receipt);
 
 

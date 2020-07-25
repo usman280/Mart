@@ -43,15 +43,22 @@ const SalesTable = ({ mytitle, mydata, search, exportButton }) => {
             columns={[
                 { title: "Sale Id", field: "saleid", cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' } },
                 {
-                    title: "Receipt", field: "receipt", render: (item) =>
-                        item.receipt.map((item, index) =>
-                            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }} key={index}>
-                                <p>{item.itemid}</p>
-                                <p>{item.itemname}</p>
-                                <p>{item.price}</p>
-                                <p>{item.quantity}</p>
+                    title: "Receipt", field: "receipt",render: (item) =>
+                        <div>
+                            <div style={{ display: 'flex', flexDirection: 'row', color:'#fff', flex: 1, justifyContent: 'space-around', alignItems: 'center' }}   >
+                                <p>item id</p>
+                                <p>price</p>
+                                <p>quantity</p>
+                                <p>total price</p>
                             </div>
-                        ), cellStyle: { textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' }
+                            {item.receipt.map((item, index) =>
+                                <div style={{ display: 'flex', color:'#fff', flexDirection: 'row', flex: 1, justifyContent: 'space-around', alignItems: 'center' }} key={index}>
+                                    <p>{item.itemid}</p>
+                                    <p>{item.price}</p>
+                                    <p>{item.quantity}</p>
+                                    <p>{item.quantity*item.price}</p>
+                                </div>
+                            )} </div>, cellStyle: { backgroundColor:'#000',  textAlign: 'center', fontWeight: '550', borderRightWidth: 1, borderBottomWidth: 1, borderRightStyle: 'solid', borderBottomStyle: 'solid' }
                 },
             ]
             }

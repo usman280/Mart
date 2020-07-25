@@ -11,6 +11,20 @@ import SalesTable from '../../../Components/SalesTable';
 export default function Shop2Sales() {
 
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const componentRef = useRef();
 
   const [shop2Data, setShop2Data] = useState([]);
@@ -23,12 +37,27 @@ export default function Shop2Sales() {
   const [InventoryData, setInventoryData] = useState([]);
   const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
   const [previousQuantities, setPreviousQuantities] = useState([]);
+  const [saleAmount, setSaleAmount] = useState(0);
 
   useEffect(() => {
 
 
     onDetectedHandler = onDetectedHandler.bind(this);
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth()+1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
 
+    var strdate = Day + "-" + Month + "-" + Year;
+
+    const fetchSaleData = async () => {
+      database.ref("shop2").child("Accounts").child(monthNames[Month-1]).child(strdate).on("value", (snapshot) => {
+        //console.log("value of sale", snapshot.child('sale').val());
+        if(snapshot.child('sale').exists()){
+          setSaleAmount(parseInt(snapshot.child('sale').val()));
+        }
+      });
+    }
 
     const fetchData = async () => {
       database
@@ -95,6 +124,7 @@ export default function Shop2Sales() {
 
     fetchShopData();
     fetchData();
+    fetchSaleData();
   }, []);
 
 
@@ -184,6 +214,18 @@ export default function Shop2Sales() {
 
   function generateReceipt() {
 
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth()+1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
+
+    var strdate = Day + "-" + Month + "-" + Year;
+    /// console.log(monthNames[Month]);
+
+    let totalamount = 0;
+
+
+
     let i = 0;
     receipt.forEach(function (input) {
       if (i < receipt.length) {
@@ -193,10 +235,19 @@ export default function Shop2Sales() {
           quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
         }
 
+        totalamount = totalamount + (input.quantity * input.price);
+
         i += 1;
         database.ref("shop2").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
+
+    const saledetail = {
+      sale: totalamount + saleAmount
+    }
+
+    console.log(saledetail);
+    database.ref("shop2").child("Accounts").child(monthNames[Month-1]).child(strdate).update(saledetail);
     database.ref("shop2").child("Sales").push(receipt);
 
 
