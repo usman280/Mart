@@ -11,6 +11,21 @@ import SalesTable from '../../../Components/SalesTable';
 export default function Shop1Sales() {
 
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const componentRef = useRef();
 
   const [shop1Data, setShop1Data] = useState([]);
@@ -23,12 +38,27 @@ export default function Shop1Sales() {
   const [InventoryData, setInventoryData] = useState([]);
   const [itemsPreviousQuantity, setItemsPreviousQuantity] = useState([]);
   const [previousQuantities, setPreviousQuantities] = useState([]);
+  const [saleAmount, setSaleAmount] = useState(0);
 
   useEffect(() => {
 
-
     onDetectedHandler = onDetectedHandler.bind(this);
 
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth() + 1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
+
+    var strdate = Day + "-" + Month + "-" + Year;
+
+    const fetchSaleData = async () => {
+      database.ref("shop1").child("Accounts").child(monthNames[Month - 1]).child(strdate).on("value", (snapshot) => {
+        //console.log("value of sale", snapshot.child('sale').val());
+        if (snapshot.child('sale').exists()) {
+          setSaleAmount(parseInt(snapshot.child('sale').val()));
+        }
+      });
+    }
 
     const fetchData = async () => {
       database
@@ -95,6 +125,7 @@ export default function Shop1Sales() {
 
     fetchShopData();
     fetchData();
+    fetchSaleData();
   }, []);
 
 
@@ -104,43 +135,45 @@ export default function Shop1Sales() {
   var onDetectedHandler = (result) => {
     Quagga.offDetected();
 
-    InventoryData.forEach(function (item) {
-      const resultval = parseInt(result.codeResult.code);
-      if (item.itemid == resultval) {
-        if (codes.includes(result.codeResult.code)) {
-          window.alert("Already Scanned");
-        }
-        else {
-          const itemid = result.codeResult.code;
-          codes.push(itemid);
+    if (InventoryData.filter(e => e.itemid === result.codeResult.code).length > 0) {
+      if (codes.includes(result.codeResult.code)) {
+        window.alert("Already Scanned");
+      }
+      else {
+        const itemid = result.codeResult.code;
+        codes.push(itemid);
 
-          const path = itemid.toString();
 
-          database.ref('shop1').child("Inventory").child(path).once("value", (snapshot) => {
+        const path = itemid.toString();
 
-            const detecteditemquantity = snapshot.child('quantity').val();
+        database.ref('shop1').child("Inventory").child(path).once("value", (snapshot) => {
 
-            let newdetails = {
-              itemid: snapshot.child('itemid').val(),
-              itemname: snapshot.child('itemname').val(),
-              price: snapshot.child('price').val(),
-              shopquantity: snapshot.child('quantity').val(),
-            }
+          const detecteditemquantity = snapshot.child('quantity').val();
 
-            previousQuantities.push(parseInt(detecteditemquantity));
+          let newdetails = {
+            itemid: snapshot.child('itemid').val(),
+            itemname: snapshot.child('itemname').val(),
+            price: snapshot.child('price').val(),
+            shopquantity: snapshot.child('quantity').val(),
+          }
 
-            list.push(newdetails);
-            const newlist = [...list];
-            setReceipt(newlist);
-            const newQuantities = [...previousQuantities]
-            setItemsPreviousQuantity(newQuantities);
+          previousQuantities.push(parseInt(detecteditemquantity));
 
-          });
+          list.push(newdetails);
+          const newlist = [...list];
+          setReceipt(newlist);
+          const newQuantities = [...previousQuantities]
+          setItemsPreviousQuantity(newQuantities);
 
-        }
+        });
 
       }
-    })
+
+    }
+    else {
+      window.alert("Item Not Available In Stock");
+    }
+
     setTimeout(() => {
       Quagga.start();
       Quagga.onDetected(onDetectedHandler)
@@ -184,6 +217,15 @@ export default function Shop1Sales() {
 
   function generateReceipt() {
 
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth() + 1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
+
+    var strdate = Day + "-" + Month + "-" + Year;
+    
+    let totalamount = 0;
+
     let i = 0;
     receipt.forEach(function (input) {
       if (i < receipt.length) {
@@ -192,13 +234,21 @@ export default function Shop1Sales() {
         const modifyQuantity = {
           quantity: itemsPreviousQuantity[i] - parseInt(quantity[i])
         }
-        
 
+        totalamount = totalamount + (input.quantity * input.price);
 
         i += 1;
         database.ref("shop1").child("Inventory").child(input.itemid).update(modifyQuantity);
       }
     });
+
+    const saledetail = {
+      date: strdate,
+      sale: totalamount + saleAmount
+    }
+
+    console.log(saledetail);
+    database.ref("shop1").child("Accounts").child(monthNames[Month - 1]).child(strdate).update(saledetail);
     database.ref("shop1").child("Sales").push(receipt);
 
     setItemsPreviousQuantity([]);

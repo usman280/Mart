@@ -15,7 +15,7 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check, checkBoxHandler, onClose, onCancelClick, error, onDistributeClick, itemId, idHandler, quantity, quantityHandler }) => {
+const DistributionForm = ({ shop1, shop2, shop3, shop4, open, shop1check, shop2check, shop3check, shop4check, checkBoxHandler, onClose, onCancelClick, error, onDistributeClick, itemId, idHandler, quantity, quantityHandler }) => {
 
 
     const classes = useStyles();
@@ -43,7 +43,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                     onChange={idHandler}
                 />
                 <FormControl className={classes.checkBoxesContainer}>
-                    <FormControlLabel className={classes.checkBoxStyle}
+                    {shop1 ? <FormControlLabel className={classes.checkBoxStyle}
                         control={
                             <Checkbox
                                 checked={shop1check}
@@ -53,8 +53,8 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                             />
                         }
                         label="Shop 1"
-                    />
-                    <FormControlLabel className={classes.checkBoxStyle}
+                    /> : null}
+                    {shop2 ? <FormControlLabel className={classes.checkBoxStyle}
                         control={
                             <Checkbox
                                 checked={shop2check}
@@ -64,19 +64,21 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                             />
                         }
                         label="Shop 2"
-                    />
-                    <FormControlLabel className={classes.checkBoxStyle}
-                        control={
-                            <Checkbox
-                                checked={shop3check}
-                                onChange={checkBoxHandler}
-                                name="shop3"
-                                color="primary"
-                            />
-                        }
-                        label="Shop 3"
-                    />
-                    <FormControlLabel className={classes.checkBoxStyle}
+                    /> : null}
+                    {
+                        shop3 ? <FormControlLabel className={classes.checkBoxStyle}
+                            control={
+                                <Checkbox
+                                    checked={shop3check}
+                                    onChange={checkBoxHandler}
+                                    name="shop3"
+                                    color="primary"
+                                />
+                            }
+                            label="Shop 3"
+                        />
+                            : null}
+                    {shop4 ? <FormControlLabel className={classes.checkBoxStyle}
                         control={
                             <Checkbox
                                 checked={shop4check}
@@ -86,7 +88,7 @@ const DistributionForm = ({ open, shop1check, shop2check, shop3check, shop4check
                             />
                         }
                         label="Shop 4"
-                    />
+                    /> : null}
                 </FormControl>
                 <CssTextField
                     variant='outlined'
