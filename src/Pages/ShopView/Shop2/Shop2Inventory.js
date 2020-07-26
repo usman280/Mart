@@ -76,8 +76,8 @@ export default function Shop2Inventory() {
               });
             }
 
-            if (key === "shop2") {
-              setShop2Data(ShopList);
+            if (key === "shop1") {
+              setShop1Data(ShopList);
             }
 
             if (key === "shop3") {

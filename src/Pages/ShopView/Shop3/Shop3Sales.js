@@ -44,6 +44,20 @@ export default function Shop3Sales() {
 
     onDetectedHandler = onDetectedHandler.bind(this);
 
+    var date = new Date();
+    var Year = date.getFullYear();
+    var Month = date.getMonth() + 1; /*date.getMonth() + 1  fetch august data*/
+    var Day = date.getDate(); /*date.getDate() + 6  fetch august date 25*/
+
+    var strdate = Day + "-" + Month + "-" + Year;
+
+    const fetchSaleData = async () => {
+      database.ref("shop3").child("Accounts").child(monthNames[Month - 1]).child(strdate).on("value", (snapshot) => {
+        if (snapshot.child('sale').exists()) {
+          setSaleAmount(parseInt(snapshot.child('sale').val()));
+        }
+      });
+    }
 
     const fetchData = async () => {
       database
@@ -110,6 +124,7 @@ export default function Shop3Sales() {
 
     fetchShopData();
     fetchData();
+    fetchSaleData();
   }, []);
 
 
@@ -119,43 +134,45 @@ export default function Shop3Sales() {
   var onDetectedHandler = (result) => {
     Quagga.offDetected();
 
-    InventoryData.forEach(function (item) {
-      const resultval = parseInt(result.codeResult.code);
-      if (item.itemid == resultval) {
-        if (codes.includes(result.codeResult.code)) {
-          window.alert("Already Scanned");
-        }
-        else {
-          const itemid = result.codeResult.code;
-          codes.push(itemid);
+    if (InventoryData.filter(e => e.itemid === result.codeResult.code).length > 0) {
+      if (codes.includes(result.codeResult.code)) {
+        window.alert("Already Scanned");
+      }
+      else {
+        const itemid = result.codeResult.code;
+        codes.push(itemid);
 
-          const path = itemid.toString();
 
-          database.ref('shop3').child("Inventory").child(path).once("value", (snapshot) => {
+        const path = itemid.toString();
 
-            const detecteditemquantity = snapshot.child('quantity').val();
+        database.ref('shop3').child("Inventory").child(path).once("value", (snapshot) => {
 
-            let newdetails = {
-              itemid: snapshot.child('itemid').val(),
-              itemname: snapshot.child('itemname').val(),
-              price: snapshot.child('price').val(),
-              shopquantity: snapshot.child('quantity').val(),
-            }
+          const detecteditemquantity = snapshot.child('quantity').val();
 
-            previousQuantities.push(parseInt(detecteditemquantity));
+          let newdetails = {
+            itemid: snapshot.child('itemid').val(),
+            itemname: snapshot.child('itemname').val(),
+            price: snapshot.child('price').val(),
+            shopquantity: snapshot.child('quantity').val(),
+          }
 
-            list.push(newdetails);
-            const newlist = [...list];
-            setReceipt(newlist);
-            const newQuantities = [...previousQuantities]
-            setItemsPreviousQuantity(newQuantities);
+          previousQuantities.push(parseInt(detecteditemquantity));
 
-          });
+          list.push(newdetails);
+          const newlist = [...list];
+          setReceipt(newlist);
+          const newQuantities = [...previousQuantities]
+          setItemsPreviousQuantity(newQuantities);
 
-        }
+        });
 
       }
-    })
+
+    }
+    else {
+      window.alert("Item Not Available In Stock");
+    }
+
     setTimeout(() => {
       Quagga.start();
       Quagga.onDetected(onDetectedHandler)
@@ -227,6 +244,7 @@ export default function Shop3Sales() {
     });
 
     const saledetail = {
+      date: strdate,
       sale: totalamount + saleAmount
     }
 
