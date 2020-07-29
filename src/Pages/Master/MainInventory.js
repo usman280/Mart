@@ -205,18 +205,26 @@ export default function MainInventory() {
     let shop4list = shop4data;
 
 
-    for (let item in items) {
-      if (e.target.value === items[item].itemid) {
-        setItemId(e.target.value);
-        setItemName(items[item].itemname);
-        setPrice(items[item].price);
-        setPreviousQuantity(items[item].quantity);
-        break;
-      } else {
-        setItemId(e.target.value);
-        setItemName("");
-        setPrice("");
-        setPreviousQuantity(0);
+    if (items.length === 0) {
+      setItemId(e.target.value);
+      setItemName("");
+      setPrice("");
+      setPreviousQuantity(0);
+    }
+    else {
+      for (let item in items) {
+        if (e.target.value === items[item].itemid) {
+          setItemId(e.target.value);
+          setItemName(items[item].itemname);
+          setPrice(items[item].price);
+          setPreviousQuantity(items[item].quantity);
+          break;
+        } else {
+          setItemId(e.target.value);
+          setItemName("");
+          setPrice("");
+          setPreviousQuantity(0);
+        }
       }
     }
 
@@ -401,7 +409,7 @@ export default function MainInventory() {
           Distribute
         </Button>
 
-        <ShowDialogButton onClick={() => setOpen(true)} />
+        <ShowDialogButton DialogText="Add New Item" onClick={() => setOpen(true)} />
       </div>
       <AddItemForm
         open={open}

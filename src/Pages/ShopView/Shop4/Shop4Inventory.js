@@ -241,6 +241,13 @@ export default function Shop4Inventory() {
     let shop3list = shop3data;
 
 
+   if(items.length === 0){
+    setItemId(e.target.value);
+    setItemName("");
+    setPrice("");
+    setPreviousQuantity(0);
+   }
+   else{
     for (let item in items) {
       if (e.target.value === items[item].itemid) {
         setItemId(e.target.value);
@@ -255,6 +262,7 @@ export default function Shop4Inventory() {
         setPreviousQuantity(0);
       }
     }
+   }
 
     // FOR SHOP 1
 
